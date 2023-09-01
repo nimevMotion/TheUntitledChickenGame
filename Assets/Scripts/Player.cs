@@ -12,13 +12,24 @@ public class Player : MonoBehaviour
 
     /*Serialized var*/
     [SerializeField]
-    private Camera m_Camera;
+    private GameObject m_AimCamera;
+    [SerializeField]
+    private GameObject m_MainCamera;
     [SerializeField]
     private GameObject m_Bullet;
+    [SerializeField]
+    private GameObject m_AimOrigin;
+    [SerializeField]
+    private float m_shootForce;
+    [SerializeField]
+    private AudioClip[] m_SoundsPlayer;
+    [SerializeField]
+    private float speedRot;
 
     /*Private*/
     private Animator m_Animator;
     private AnimatorClipInfo[] m_CurrentClipInfo;
+    private AudioSource m_audioPlayer;
     private Rigidbody m_RBBullet;
     private Transform mAim;
     private Transform mplayerMesh;
@@ -31,12 +42,11 @@ public class Player : MonoBehaviour
     private float verticalInput;
 
     private Vector3 newRotation;
-    private Vector3 iniCamPos;
-    private Vector3 iniCamDir;
 
     private bool m_IsPlaying = false;
     private bool isRunning = false;
-    private bool isAimming = true;
+    private bool isAimming = false;
+    private bool haveGun = true;
 
     // Start is called before the first frame update
     void Start()
@@ -44,18 +54,17 @@ public class Player : MonoBehaviour
         foreach (Transform child in transform)
         {
             if (child.name.Equals("Player"))
-            {
                 mplayerMesh = child;
-            }
-            if (child.name.Equals("Aim"))
+            else if (child.name.Equals("Aim"))
                 mAim = child;
         }
 
-        m_Animator = GetComponentInChildren<Animator>();      
+        m_Animator = GetComponentInChildren<Animator>();
         _lookX = GetComponentInChildren<LookX>();
+        m_audioPlayer = GetComponentInChildren<AudioSource>();
 
-        iniCamPos = m_Camera.transform.localPosition;
-        iniCamDir = m_Camera.transform.localEulerAngles;
+        //iniCamPos = m_Camera.transform.localPosition;
+        //iniCamDir = m_Camera.transform.localEulerAngles;
     }
 
     // Update is called once per frame
@@ -63,47 +72,44 @@ public class Player : MonoBehaviour
     {
         m_CurrentClipInfo = m_Animator.GetCurrentAnimatorClipInfo(0);
         clipName = m_CurrentClipInfo[0].clip.name;
-        
+
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
 
-        //transform.Translate(Vector3.right * Time.deltaTime * speed * horizontalInput, Space.World);
-        //transform.Rotate(Vector3.up * horizontalInput);
         newRotation = transform.localEulerAngles;
         newRotation.y = mplayerMesh.transform.localEulerAngles.y;
 
-        //transform.localEulerAngles = newRotation;
         transform.Translate(Vector3.forward * Time.deltaTime * speed * verticalInput);
         transform.Translate(Vector3.right * Time.deltaTime * speed * horizontalInput);
 
+        //Inicia Controles y movimiento
         if (verticalInput > 0.0f)
-            if (isRunning)
-                if (isAimming)
-                    m_Animator.SetInteger("State", 6);
-                else
-                    m_Animator.SetInteger("State", 2);
-            else if (isAimming)
-                m_Animator.SetInteger("State", 5);
+        {
+            if ((isRunning || haveGun) && !isAimming)
+                m_Animator.SetInteger("State", 2);
             else
                 m_Animator.SetInteger("State", 1);
+        }
         else if (verticalInput < 0.0f)
-            if (isRunning)
+        {
+            if (isRunning || haveGun)
                 m_Animator.SetInteger("State", -2);
             else
                 m_Animator.SetInteger("State", -1);
+        }
 
         if (horizontalInput > 0.0f)
             m_Animator.SetInteger("State", 3);
         else if (horizontalInput < 0.0f)
             m_Animator.SetInteger("State", -3);
 
-        if (horizontalInput == 0.0f && verticalInput == 0.0f && !m_IsPlaying)
-        { 
+        if (horizontalInput == 0.0f && verticalInput == 0.0f)
+        {
             m_Animator.SetInteger("State", 0);
-            mplayerMesh.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+            //mplayerMesh.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
         }
 
-        if(horizontalInput != 0.0f || verticalInput != 0.0f)
+        if (horizontalInput != 0.0f || verticalInput != 0.0f)
         {
             if (Input.GetKeyDown(KeyCode.LeftShift))
             {
@@ -125,24 +131,53 @@ public class Player : MonoBehaviour
         {
             RotatePlayer();
         }
-        if(Input.GetKeyDown(KeyCode.Z))
-        {
-            mplayerMesh.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
-        }
-        
+
         if (clipName.Equals("LeftTurn") || clipName.Equals("RightTurn"))
             m_IsPlaying = true;
         else if ((!clipName.Equals("LeftTurn") || !clipName.Equals("RightTurn"))
             && m_IsPlaying)
         {
-            ResetCam();
+            //ResetCam();
         }
 
-        if(Input.GetMouseButtonDown(1))
+        //Shoot
+        if (Input.GetMouseButtonDown(0))
         {
-            m_RBBullet = Instantiate(m_Bullet, mAim.position, Quaternion.identity)
+            m_Animator.SetTrigger("shoot");
+            float x = Screen.width / 2;
+            float y = Screen.height / 2;
+
+            //Ray ray = m_Camera.ScreenPointToRay(new Vector3(x,y,0));
+            
+            //Debug.DrawRay(mAim.position, ray.direction * 10, Color.yellow);
+            m_RBBullet = Instantiate(m_Bullet, m_AimOrigin.transform.position, Quaternion.identity)
                 .GetComponent<Rigidbody>();
-            m_RBBullet.AddForce(Vector3.forward * 5.0f, ForceMode.Impulse);
+            m_audioPlayer.clip = m_SoundsPlayer[0];
+            m_audioPlayer.Play();
+            m_RBBullet.AddForce((mAim.position - m_AimOrigin.transform.position).normalized * m_shootForce,
+                ForceMode.Impulse);
+            }
+
+        //Aimming
+        if (Input.GetMouseButtonDown(1))
+        {
+            m_Animator.SetBool("isAimming", true);
+            isAimming = true;
+        }else if(Input.GetMouseButtonUp(1))
+        {
+            m_Animator.SetBool("isAimming", false);
+            isAimming = false;
+        }
+
+        if(isAimming)
+        {
+            m_MainCamera.SetActive(false);
+            m_AimCamera.SetActive(true);
+        }
+        else
+        {
+            m_MainCamera.SetActive(true);
+            m_AimCamera.SetActive(false);
         }
     }
 
@@ -151,27 +186,34 @@ public class Player : MonoBehaviour
         Debug.Log("Estoy rotando");
         isRotating = false;
         m_Animator.SetTrigger(turn);
-    }
-
-    private void ResetCam()
-    {
-        m_IsPlaying = false;
-        float angle = 0.0f;
         int twist = turn.Equals("TurnLeft") ? 1 : -1;
-        float pivote = transform.localEulerAngles.y;
-        Vector3 rotCam = m_Camera.transform.localEulerAngles; 
-
-        do
-        {
-            angle += Time.deltaTime * 0.1f;
-            transform.Rotate(Vector3.up, -angle * twist, Space.Self);
-            transform.rotation = Quaternion.Euler(0.0f, pivote - angle * twist, 0.0f);
-            mplayerMesh.transform.rotation = Quaternion.Euler(0.0f, angle * twist, 0.0f);
-        } while (angle < 60.0f);
-
-        mplayerMesh.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
-        m_Camera.transform.localPosition = iniCamPos;
-        m_Camera.transform.localEulerAngles = new Vector3(rotCam.x, iniCamDir.y, 0.0f);
+        Vector3 rotTarget = transform.rotation.eulerAngles + new Vector3(0.0f, -angleRot * twist, 0.0f);
+        var step = speedRot * Time.deltaTime;
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(rotTarget), step);
         _lookX.rotate = false;
     }
+
+    //private void ResetCam()
+    //{
+    //    m_IsPlaying = false;
+    //    float angle = 0.0f;
+    //    int twist = turn.Equals("TurnLeft") ? 1 : -1;
+    //    float pivote = transform.localEulerAngles.y;
+    //    Vector3 rotCam = m_Camera.transform.localEulerAngles; 
+
+    //    do
+    //    {
+    //        angle += Time.deltaTime * 5;
+    //        //transform.Rotate(Vector3.up, -angle * twist, Space.Self);
+    //        transform.Rotate(new Vector3(0.0f, Time.deltaTime * twist, 0.0f), Space.Self);
+    //        Debug.Log(transform.rotation.y);
+    //        transform.rotation = Quaternion.Euler(0.0f, pivote - angle * twist, 0.0f);
+    //        //mplayerMesh.transform.rotation = Quaternion.Euler(0.0f, angle * twist, 0.0f);
+    //    } while (angle < 45.0f);
+
+    //    //mplayerMesh.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+    //    m_Camera.transform.localPosition = iniCamPos;
+    //    m_Camera.transform.localEulerAngles = new Vector3(rotCam.x, iniCamDir.y, 0.0f);
+    //    _lookX.rotate = false;
+    //}
 }

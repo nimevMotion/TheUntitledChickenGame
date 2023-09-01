@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+
+    Cinemachine.CinemachineImpulseSource m_source;
+
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine("DestroyPrefab");
-    }
+        m_source = GetComponent<Cinemachine.CinemachineImpulseSource>();
+        m_source.GenerateImpulse(Vector3.forward * -1);
 
-    IEnumerator DestroyPrefab()
-    {
-        yield return new WaitForSeconds(5);
-        Destroy(this);
+        Destroy(gameObject, 5);
     }
 }
