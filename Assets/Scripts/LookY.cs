@@ -10,23 +10,39 @@ public class LookY : MonoBehaviour
 
     /*Private*/
     private Vector3 newRotation;
-    
-    // Start is called before the first frame update
-    void Start()
+    private Vector3 newPosition;
+
+    private void Start()
     {
-        
+        transform.localPosition = transform.localPosition 
+            + new Vector3(0.0f, 1.5f, 0.0f);
     }
 
     // Update is called once per frame
     void Update()
     {
         float _mouseY = Input.GetAxis("Mouse Y");
-        newRotation = transform.localEulerAngles;
-        newRotation.x -= _mouseY * _sensitivity;
+        //newRotation = transform.localEulerAngles;
+        //newRotation.x -= _mouseY * _sensitivity;
 
-        if (newRotation.x > 340 || newRotation.x < 20)
+        //if (newRotation.x > 340 || newRotation.x < 20)
+        //{
+        //    transform.localEulerAngles = newRotation;
+        //}
+
+        newPosition = transform.localPosition;
+        newPosition.y += _mouseY * _sensitivity;
+        if(newPosition.y > 1.9f)
         {
-            transform.localEulerAngles = newRotation;
+            newPosition.y = 1.9f;
         }
+        else if (newPosition.y < 0.1f)
+        {
+            newPosition.y = 0.1f;
+        }
+
+        transform.localPosition = newPosition;
+
+        //transform.Translate(Vector3.up * _mouseY);
     }
 }
