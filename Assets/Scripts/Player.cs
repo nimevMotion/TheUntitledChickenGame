@@ -43,10 +43,11 @@ public class Player : MonoBehaviour
 
     private Vector3 newRotation;
 
-    private bool m_IsPlaying = false;
+   // private bool m_IsPlaying = false;
     private bool isRunning = false;
     private bool isAimming = false;
     private bool haveGun = true;
+    private bool isMoving = false;
 
     // Start is called before the first frame update
     void Start()
@@ -61,10 +62,7 @@ public class Player : MonoBehaviour
 
         m_Animator = GetComponentInChildren<Animator>();
         _lookX = GetComponentInChildren<LookX>();
-        m_audioPlayer = GetComponentInChildren<AudioSource>();
-
-        //iniCamPos = m_Camera.transform.localPosition;
-        //iniCamDir = m_Camera.transform.localEulerAngles;
+        m_audioPlayer = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -75,6 +73,14 @@ public class Player : MonoBehaviour
 
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
+
+        if((verticalInput != 0 || horizontalInput != 0) && !isMoving)
+        {
+            m_audioPlayer.Play();
+        }
+
+        if(verticalInput != 0 || horizontalInput != 0)
+            isMoving = true;
 
         newRotation = transform.localEulerAngles;
         newRotation.y = mplayerMesh.transform.localEulerAngles.y;
@@ -106,7 +112,8 @@ public class Player : MonoBehaviour
         if (horizontalInput == 0.0f && verticalInput == 0.0f)
         {
             m_Animator.SetInteger("State", 0);
-            //mplayerMesh.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+            m_audioPlayer.Stop();
+            isMoving = false;
         }
 
         if (horizontalInput != 0.0f || verticalInput != 0.0f)
@@ -115,13 +122,10 @@ public class Player : MonoBehaviour
             {
                 isRunning = true;
                 speed = 5.0f;
-                //m_Animator.speed = 5.0f;
             }
             else if (Input.GetKeyUp(KeyCode.LeftShift))
             {
                 Debug.Log("Stop running..........................");
-                //m_Animator.SetInteger("State", 0);
-                //m_Animator.speed = 1.0f;
                 isRunning = false;
                 speed = 1.0f;
             }
@@ -130,14 +134,6 @@ public class Player : MonoBehaviour
         if (isRotating)
         {
             RotatePlayer();
-        }
-
-        if (clipName.Equals("LeftTurn") || clipName.Equals("RightTurn"))
-            m_IsPlaying = true;
-        else if ((!clipName.Equals("LeftTurn") || !clipName.Equals("RightTurn"))
-            && m_IsPlaying)
-        {
-            //ResetCam();
         }
 
         //Shoot
@@ -152,8 +148,8 @@ public class Player : MonoBehaviour
             //Debug.DrawRay(mAim.position, ray.direction * 10, Color.yellow);
             m_RBBullet = Instantiate(m_Bullet, m_AimOrigin.transform.position, Quaternion.identity)
                 .GetComponent<Rigidbody>();
-            m_audioPlayer.clip = m_SoundsPlayer[0];
-            m_audioPlayer.Play();
+            //m_audioPlayer.clip = m_SoundsPlayer[0];
+            //m_audioPlayer.Play();
             m_RBBullet.AddForce((mAim.position - m_AimOrigin.transform.position).normalized * m_shootForce,
                 ForceMode.Impulse);
             }
@@ -193,27 +189,4 @@ public class Player : MonoBehaviour
         _lookX.rotate = false;
     }
 
-    //private void ResetCam()
-    //{
-    //    m_IsPlaying = false;
-    //    float angle = 0.0f;
-    //    int twist = turn.Equals("TurnLeft") ? 1 : -1;
-    //    float pivote = transform.localEulerAngles.y;
-    //    Vector3 rotCam = m_Camera.transform.localEulerAngles; 
-
-    //    do
-    //    {
-    //        angle += Time.deltaTime * 5;
-    //        //transform.Rotate(Vector3.up, -angle * twist, Space.Self);
-    //        transform.Rotate(new Vector3(0.0f, Time.deltaTime * twist, 0.0f), Space.Self);
-    //        Debug.Log(transform.rotation.y);
-    //        transform.rotation = Quaternion.Euler(0.0f, pivote - angle * twist, 0.0f);
-    //        //mplayerMesh.transform.rotation = Quaternion.Euler(0.0f, angle * twist, 0.0f);
-    //    } while (angle < 45.0f);
-
-    //    //mplayerMesh.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
-    //    m_Camera.transform.localPosition = iniCamPos;
-    //    m_Camera.transform.localEulerAngles = new Vector3(rotCam.x, iniCamDir.y, 0.0f);
-    //    _lookX.rotate = false;
-    //}
 }
