@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public bool isGameOver;
+    public bool isGamePause;
+
     [SerializeField]
     private GameObject[] m_Cameras;
 

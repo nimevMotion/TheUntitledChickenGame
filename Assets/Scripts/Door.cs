@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Door : MonoBehaviour
 {
+    public int doorState = 0;
+
     [SerializeField]
     private AudioClip[] m_AudioClips;
     [SerializeField]
@@ -20,7 +22,6 @@ public class Door : MonoBehaviour
     private GameObject _txtBloqueo;
 
     private bool _isOpen = false;    
-    private bool _playerFounded = false;
 
     private Ray rayfront;
     private Ray rayBack;
@@ -53,19 +54,20 @@ public class Door : MonoBehaviour
         Debug.DrawRay(pivote, rayfront.direction * 0.5f, Color.yellow);
         Debug.DrawRay(pivote, rayBack.direction * 0.5f, Color.blue);
         
-        
-
         if (!_isOpen)
         {
             if (Physics.Raycast(rayfront, out hitFront, 0.5f) &&
                 hitFront.collider.gameObject.tag.Equals("Player"))
             {
-                Debug.Log("hit:" + hitFront.collider.gameObject.name);
+                doorState = 1;
+                m_UIDoor.SetActive(true);
+                //Debug.Log("hit:" + hitFront.collider.gameObject.name);
                 if(Input.GetKeyDown(KeyCode.X))
                 {
-                    _playerFounded = true;
+                    
                     if(m_canOpen)
                     {
+                        doorState = 2;
                         StartCoroutine("OpenDoor");
                     }
                     else
@@ -74,6 +76,7 @@ public class Door : MonoBehaviour
                         m_source.Play();
                         if (!_isLock)
                         {
+                            doorState = 3;
                             _isLock = true;
                             _txtAbrir.SetActive(false);
                             _txtBloqueo.SetActive(true);
@@ -81,32 +84,27 @@ public class Door : MonoBehaviour
                         
                     }
                 }
-                
-                
-                m_UIDoor.SetActive(true);
             }
-            else
+            else if (Physics.Raycast(rayBack, out hitBack, 0.5f) && 
+                    hitBack.collider.gameObject.tag.Equals("Player"))
             {
-                m_UIDoor.SetActive(false);
-        }
-
-        if (Physics.Raycast(rayBack, out hitBack, 0.5f) && 
-                hitBack.collider.gameObject.tag.Equals("Player"))
-            {
-                Debug.Log("hit:" + hitBack.collider.gameObject.name);
+                m_UIDoor.SetActive(true);
+               //Debug.Log("hit:" + hitBack.collider.gameObject.name);
                 if (Input.GetKeyDown(KeyCode.X))
                 {
-                    _playerFounded = true;
+                    doorState = 1;
                     if (m_canOpen)
-                    {
+                    {   doorState = 2;
                         StartCoroutine("CloseDoor");
                     }
                     else
                     {
                         m_source.clip = m_AudioClips[2];
                         m_source.Play();
+                        
                         if (!_isLock)
                         {
+                            doorState = 3;
                             _isLock = true;
                             _txtAbrir.SetActive(false);
                             _txtBloqueo.SetActive(true);
@@ -114,7 +112,6 @@ public class Door : MonoBehaviour
 
                     }
                 }
-                m_UIDoor.SetActive(true);
             }
             else
             {
@@ -160,7 +157,7 @@ public class Door : MonoBehaviour
     public void GotKey()
     {
         _isLock = false;
-        Debug.Log("Se ha encontrado la llave");
+        //Debug.Log("Se ha encontrado la llave");
         m_canOpen = true;
         _txtAbrir.SetActive(true);
         _txtBloqueo.SetActive(false);
