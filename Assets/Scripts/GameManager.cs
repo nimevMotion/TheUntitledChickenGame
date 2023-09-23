@@ -5,7 +5,8 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public bool isGameOver;
-    public bool isGamePause;
+    public bool isGamePaused;
+    public bool isGameOn = true;
 
     [SerializeField]
     private GameObject[] m_Cameras;
@@ -15,5 +16,16 @@ public class GameManager : MonoBehaviour
     {
         m_Cameras[0].SetActive(false);
         m_Cameras[0].SetActive(true);
+    }
+
+    private void Update()
+    {
+        if(isGameOn)
+        {
+            if(Input.GetKeyDown(KeyCode.Return))
+            {
+                isGamePaused = true;
+            }
+        }
     }
 }

@@ -34,40 +34,59 @@ public class LookX : MonoBehaviour
     void Update()
     {
         float _mouseX = Input.GetAxis("Mouse X");
-        if (!rotate)
+
+        newPosition = transform.localPosition;
+        newPosition.x += _mouseX * m_sensitivity;
+        if (newPosition.x > 0.5f)
         {
-            transform.RotateAround(m_player.position, Vector3.up, _mouseX * m_sensitivity);
+            newPosition.x = 0.5f;
+            player.isRotating = true;
+        }
+        else if (newPosition.x < -0.3f)
+        {
+            newPosition.x = -0.3f;
+            player.isRotating = true;
+        }else
+        {
+            player.isRotating = false;
         }
 
-        //if (CameraAngle() > 17.0f && !rotate)
-        if (CameraAngle() > 3.0f && !rotate)
-        {
-            if (transform.localPosition.x < 0)
-            {
-                rotate = true;
-                Debug.Log("Limite de vista izquierdo");
-                player.turn = "TurnLeft";
-                player.isRotating = true;
+        transform.localPosition = newPosition;
+        //float _mouseX = Input.GetAxis("Mouse X");
+        //if (!rotate)
+        //{
+        //    transform.RotateAround(m_player.position, Vector3.up, _mouseX * m_sensitivity);
+        //}
 
-            }
-            else if (transform.localPosition.x > 0)
-            {
-                rotate = true;
-                Debug.Log("Limite de vista derecha");
-                player.turn = "TurnRight";
-                player.isRotating = true;
-            }
-        }
+        ////if (CameraAngle() > 17.0f && !rotate)
+        //if (CameraAngle() > 3.0f && !rotate)
+        //{
+        //    if (transform.localPosition.x < 0)
+        //    {
+        //        rotate = true;
+        //        Debug.Log("Limite de vista izquierdo");
+        //        player.turn = "TurnLeft";
+        //        player.isRotating = true;
+
+        //    }
+        //    else if (transform.localPosition.x > 0)
+        //    {
+        //        rotate = true;
+        //        Debug.Log("Limite de vista derecha");
+        //        player.turn = "TurnRight";
+        //        player.isRotating = true;
+        //    }
+        //}
     }
 
-    private float CameraAngle()
-    {
-        //Vector3 vecCamera = transform.worldToLocalMatrix.MultiplyVector(transform.forward);
-        Vector3 vecCamera = transform.worldToLocalMatrix.MultiplyVector(transform.forward);
-        Vector3 vecPlayer = m_player.worldToLocalMatrix.MultiplyVector(transform.forward);
-        //Debug.Log(Vector3.Angle(vecPlayer + vecCamera, vecCamera));
-        return Vector3.Angle(vecPlayer + vecCamera, vecCamera);
-        //return Vector3.Angle(vecPlayer + vecCamera, vecCamera);
-    }
+    //private float CameraAngle()
+    //{
+    //    //Vector3 vecCamera = transform.worldToLocalMatrix.MultiplyVector(transform.forward);
+    //    Vector3 vecCamera = transform.worldToLocalMatrix.MultiplyVector(transform.forward);
+    //    Vector3 vecPlayer = m_player.worldToLocalMatrix.MultiplyVector(transform.forward);
+    //    //Debug.Log(Vector3.Angle(vecPlayer + vecCamera, vecCamera));
+    //    return Vector3.Angle(vecPlayer + vecCamera, vecCamera);
+    //    //return Vector3.Angle(vecPlayer + vecCamera, vecCamera);
+    //}
 
 }
