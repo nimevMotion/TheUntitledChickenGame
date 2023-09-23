@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class HUDManager : MonoBehaviour
@@ -10,18 +11,16 @@ public class HUDManager : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI m_numPollitosTxt;
     [SerializeField]
-    private GameObject m_PauseMenu;
-    [SerializeField]
-    private GameObject m_HUD;
-    [SerializeField]
-    private GameObject m_ItemsMenu;
-   
+    private Slider m_BarraVida;
+    
     private GameManager _gameManager;
+    private Player _player;
 
     // Start is called before the first frame update
     void Start()
     {
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        _player = GameObject.FindWithTag("Player").GetComponent<Player>();
     }
 
     // Update is called once per frame
@@ -29,20 +28,10 @@ public class HUDManager : MonoBehaviour
     {
         int pollitos = GameObject.FindGameObjectsWithTag("Pollito").Length;
         m_numPollitosTxt.text = pollitos.ToString("D2");
-
-        if(_gameManager.isGamePaused)
-        {
-            m_PauseMenu.SetActive(true);
-
-        }
-        else
-        {
-            m_PauseMenu.SetActive(false);
-        }
+        m_BarraVida.value = _player.life;
+        
     }
 
-    public void GetItems()
-    {
-        m_ItemsMenu.SetActive(true);
-    }
+
+
 }

@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     public bool isRotating = false;
     public string turn = "";
     public int chocolateBar;
+    public int life = 50;
 
     /*Serialized var*/
     [SerializeField]
@@ -233,6 +234,11 @@ public class Player : MonoBehaviour
             //m_audioPlayer.Stop();
             //isMoving = false;
         }
+    }
+
+    public void RecoverHealth(int cure)
+    {
+        life = life + cure; 
     }
     private void RotatePlayer()
     {
