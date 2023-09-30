@@ -1,27 +1,12 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b71ad40e238046238f9b0c6f33c3791, type: 3}
-  m_Name: SM_Prop_Necklace_Mannequin_08_Convex
-  m_EditorClassIdentifier: 
-  ConvexMeshes:
-  - {fileID: 43393436632349520}
-  HashOfSourceMeshes: 6d314f8ede4f6a0d3996974600000000
 --- !u!43 &43393436632349520
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Generated convex submesh 1
+  m_Name: SM_Prop_Necklace_Mannequin_08_Convex
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2

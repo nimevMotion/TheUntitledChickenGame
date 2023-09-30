@@ -6,8 +6,7 @@ using TMPro;
 
 public class HUDManager : MonoBehaviour
 {
-    [SerializeField]
-    private int m_TotalPollitos;
+
     [SerializeField]
     private TextMeshProUGUI m_numPollitosTxt;
     [SerializeField]
@@ -26,8 +25,7 @@ public class HUDManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        int pollitos = GameObject.FindGameObjectsWithTag("Pollito").Length;
-        m_numPollitosTxt.text = pollitos.ToString("D2");
+        m_numPollitosTxt.text = _gameManager.pollitos.ToString("D2");
         m_BarraVida.value = _player.life;
         
     }

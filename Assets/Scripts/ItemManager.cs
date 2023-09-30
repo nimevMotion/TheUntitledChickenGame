@@ -7,8 +7,6 @@ using TMPro;
 
 public class ItemManager : MonoBehaviour
 {
-    //public Item[] items;
-    //public GameObject[] items;
     public Tuple<string, int>[] items;
     [SerializeField]
     private GameObject m_itemPrefab;
@@ -17,7 +15,6 @@ public class ItemManager : MonoBehaviour
 
     private RectTransform rectTransform;
     private int _limWidth;
-    private int _limHeight;
     private int offsetImg = 164;
     private int offsetItemX = 264;
     private int offsetItemY = 264;
@@ -25,14 +22,6 @@ public class ItemManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //items = new Item[2];
-        //items[0] = gameObject.AddComponent<Item>();
-        //items[0].itemName = "Chocolate Bar";
-        //items[0].itemSize = 1;
-        //items[1] = gameObject.AddComponent<Item>();
-        //items[1].itemName = "Butter";
-        //items[1].itemSize = -1;
-
         items = new Tuple<string, int>[]{
             new Tuple<string, int>("Chocolate Bar", 1),
                 new Tuple<string, int>("Butter", -1)
@@ -40,32 +29,6 @@ public class ItemManager : MonoBehaviour
 
         rectTransform = GetComponent<RectTransform>();
         _limWidth = (int)rectTransform.rect.width / 264;
-        _limHeight = (int)rectTransform.rect.height / 264;
-        //GameObject temp;
-        //GameObject temp2;
-        //RawImage tempImg;
-        //TMP_Text tempTxt;
-        //TMP_Text tempTxt2;
-
-        //temp = Instantiate(m_itemPrefab, rectTransform);
-        //RectTransform rect = temp.GetComponent<RectTransform>();
-        //Debug.Log(rect.position);
-        //rect.anchoredPosition = new Vector2(rect.anchoredPosition.x - (rectTransform.rect.width / 2) +164, 
-        //    rect.anchoredPosition.y + (rectTransform.rect.height / 2) - 164);
-        ////tempImg = ;
-        //temp.GetComponentInChildren<RawImage>().texture = m_textures[0];
-        //tempTxt = temp.GetComponentInChildren<TMP_Text>();
-        //tempTxt.text = items[1].Name + " " + (items[1].Size == -1 ? "\u221E" : items[1].Size);
-
-        //temp2 = Instantiate(m_itemPrefab, rectTransform);
-        //RectTransform rect2 = temp2.GetComponent<RectTransform>();
-        //Debug.Log(rect.position);
-        //rect2.anchoredPosition = new Vector2(rect.anchoredPosition.x + 264,
-        //    rect.anchoredPosition.y);
-        ////tempImg = ;
-        //temp2.GetComponentInChildren<RawImage>().texture = m_textures[1];
-        //tempTxt2 = temp2.GetComponentInChildren<TMP_Text>();
-        //tempTxt2.text = items[0].Name + " " + (items[0].Size == -1 ? "\u221E" : items[0].Size);
 
         RectTransform initialRect = null;
         

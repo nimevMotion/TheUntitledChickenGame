@@ -12,13 +12,12 @@ GameObject:
   - component: {fileID: 33313446755758738}
   - component: {fileID: 23795223983404172}
   - component: {fileID: 64337057784617712}
-  - component: {fileID: 9030579897299312811}
-  - component: {fileID: 669400712648183972}
-  - component: {fileID: 879447700}
-  - component: {fileID: 3902820224987828426}
+  - component: {fileID: 839929088352611207}
+  - component: {fileID: 487334023064519938}
+  - component: {fileID: 9151210044023962791}
   m_Layer: 0
   m_Name: SM_Bld_Castle_Door_Single_01
-  m_TagString: Door
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -97,25 +96,32 @@ MeshCollider:
   m_GameObject: {fileID: 1175005079664630}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43571131170773726, guid: 16741d1f5e0821d42a9eb81a4a254c98, type: 2}
---- !u!65 &9030579897299312811
-BoxCollider:
+--- !u!114 &839929088352611207
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1175005079664630}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.029026, y: 1.8398647, z: 0.47743237}
-  m_Center: {x: -0.50942266, y: 1.2606742, z: 0.0054913163}
---- !u!95 &669400712648183972
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed16d47da7f0d6841a1599fc99ea7c13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  doorState: 0
+  m_AudioClips:
+  - {fileID: 8300000, guid: a48f8474bdbfac04182e37694811aad5, type: 3}
+  - {fileID: 8300000, guid: 6d00b72ff4d69c64383087f4cc298742, type: 3}
+  - {fileID: 8300000, guid: 27a39c66ded2a7f43b3b4e6a6f31bdc4, type: 3}
+  m_canOpen: 1
+  _isLock: 1
+  m_UIDoor: {fileID: 0}
+--- !u!95 &487334023064519938
 Animator:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -136,24 +142,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &879447700
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1175005079664630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed16d47da7f0d6841a1599fc99ea7c13, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AudioClips:
-  - {fileID: 8300000, guid: a48f8474bdbfac04182e37694811aad5, type: 3}
-  - {fileID: 8300000, guid: 6d00b72ff4d69c64383087f4cc298742, type: 3}
-  - {fileID: 8300000, guid: b711c52306f201a418b515a071cffa02, type: 3}
-  m_canOpen: 1
---- !u!82 &3902820224987828426
+--- !u!82 &9151210044023962791
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -164,7 +153,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

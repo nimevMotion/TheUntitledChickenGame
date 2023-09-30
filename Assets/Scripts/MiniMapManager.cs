@@ -1,18 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MiniMapManager : MonoBehaviour
 {
-    int _minimapLayer;
+    
+
+    [SerializeField]
+    private GameObject m_MiniMap;
+
     private Ray ray;
     private RaycastHit hit;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        _minimapLayer = gameObject.layer;
-    }
 
     // Update is called once per frame
     void Update()
@@ -22,11 +21,21 @@ public class MiniMapManager : MonoBehaviour
         Debug.DrawRay(transform.position, ray.direction * 2.0f, Color.yellow);
 
         if (Physics.Raycast(ray, out hit, 2.0f) &&
-                hit.collider.gameObject.tag.Equals("Minimap"))
+                hit.collider.gameObject.tag.Equals("Minimap") &&
+                hit.collider.gameObject.layer != gameObject.layer)
         {
-            //Debug.Log(hit.collider.gameObject.name);
             hit.collider.gameObject.layer = gameObject.layer;
-
         }
+    }
+
+    public List<Tuple<string, bool>> GetData()
+    {
+        List<Tuple<string, bool>> map = new List<Tuple<string, bool>>();
+        foreach (Transform child in m_MiniMap.transform)
+        {
+            bool isVisble = child.gameObject.layer == gameObject.layer ? true : false;
+            map.Add(new Tuple<string, bool>(child.name, isVisble));
+        }
+        return map;
     }
 }

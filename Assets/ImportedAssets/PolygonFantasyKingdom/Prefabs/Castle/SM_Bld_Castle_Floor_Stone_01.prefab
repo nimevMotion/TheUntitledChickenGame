@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33900135548503446}
   - component: {fileID: 23436701836980464}
   - component: {fileID: 64451022789138278}
-  - component: {fileID: 6506871427218733022}
+  - component: {fileID: 6906273215971777917}
   m_Layer: 0
   m_Name: SM_Bld_Castle_Floor_Stone_01
   m_TagString: Untagged
@@ -99,7 +99,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43346447457573440, guid: 2a4cbf581187056428f8b082d7be07d3, type: 2}
---- !u!65 &6506871427218733022
+--- !u!65 &6906273215971777917
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -111,4 +111,4 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 5.0010448, y: 0.2848047, z: 5}
-  m_Center: {x: -2.4994824, y: -0.10759765, z: -2.5}
+  m_Center: {x: -2.4994824, y: -0.10759766, z: -2.5}

@@ -17,6 +17,8 @@ public class UIManager : MonoBehaviour
     private GameObject m_PauseMenu;
     [SerializeField]
     private GameObject m_HUD;
+    [SerializeField]
+    private GameObject m_MapMenu;
 
     private GameManager _gameManager;
     
@@ -72,6 +74,18 @@ public class UIManager : MonoBehaviour
     public void GetItems()
     {
         m_ItemsMenu.SetActive(true);
+    }
+
+    public void GetMap()
+    {
+        m_MapMenu.SetActive(true);
+    }
+
+    public void ResumeGame()
+    {
+        _gameManager.isGamePaused = false;
+        //m_HUD.gameObject.SetActive(true);
+        //m_PauseMenu.SetActive(false);
     }
 
 }
