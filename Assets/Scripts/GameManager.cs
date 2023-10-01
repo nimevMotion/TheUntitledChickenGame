@@ -33,12 +33,8 @@ public class GameManager : MonoBehaviour
         m_Cameras[0].SetActive(true);
         activeScene = SceneManager.GetActiveScene().name;
 
-        //_itemManager = GameObject.Find("ItmesMenu").GetComponent<ItemManager>();
         _miniMapManager = GameObject.Find("MiniMapPlayer").GetComponent<MiniMapManager>();
         _player = GameObject.FindWithTag("Player").GetComponent<Player>();
-
-        
-
 
         foreach(Transform child in m_Doors.transform)
         {

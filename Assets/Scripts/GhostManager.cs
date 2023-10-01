@@ -14,6 +14,8 @@ public class GhostManager : MonoBehaviour
 
     private Animator _animator;
     private NavMeshAgent _agent;
+    private Renderer _renderer;
+    private Material _matBody;
     private GameObject _player;
     private Vector3[] _position;
 
@@ -32,8 +34,8 @@ public class GhostManager : MonoBehaviour
             Debug.LogError("El path no puede ser menor o igual a 1");
         }else
         {
-            _position = new Vector3[m_Path.Length];
-            _position[0] = m_Path[0].transform.position;
+            _position = new Vector3[m_Path.Length]; // crea el arreglo el mismo tamaño que el path
+            _position[0] = m_Path[0].transform.position; //asigna la primera posicion
 
             for (int i = 1; i < m_Path.Length; i++)
             {
@@ -43,12 +45,20 @@ public class GhostManager : MonoBehaviour
             _animator = GetComponentInChildren<Animator>();
             _agent = GetComponent<NavMeshAgent>();
             _fov = GetComponent<FieldOfView>();
+            _renderer = GetComponentInChildren<Renderer>();
             _player = GameObject.FindWithTag("Player");
             _state = GhostState.idle;
 
-        }
-        
+            foreach(var i in _renderer.materials)
+            {
+                if(i.name.Contains("Body"))
+                {
+                    _matBody = i;
+                    break;
+                }
+            }
 
+        }
     }
 
     // Update is called once per frame
@@ -60,7 +70,6 @@ public class GhostManager : MonoBehaviour
                 _animator.SetBool("walk", false);
                 break;
             case GhostState.move:
-                
                 Move();
                 break;
             case GhostState.attack:
@@ -87,13 +96,11 @@ public class GhostManager : MonoBehaviour
         var step = m_speed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, _position[_index], step);
 
-        float singleStep = m_speedRot * Time.deltaTime;
-        Vector3 targetDirection = _position[_index] - transform.position;
-        Vector3 newDirection = Vector3.RotateTowards(transform.forward, targetDirection, singleStep, 0.0f);
-        transform.rotation = Quaternion.LookRotation(newDirection);
-
-        if (transform.position == _position[_index])
+        float distance = Vector3.Distance(transform.position, _position[_index]);
+        if(distance <= 0)
         {
+            
+            Debug.Log("Cambia index " + _index);
             if (_index == m_Path.Length - 1)
             {
                 _index = 0;
@@ -102,9 +109,9 @@ public class GhostManager : MonoBehaviour
             {
                 _index++;
             }
-        }
-
-        
+            StartCoroutine("Disappear");
+            transform.LookAt(_position[_index], Vector3.up);
+        }     
     }
 
     private void Attack()
@@ -126,7 +133,27 @@ public class GhostManager : MonoBehaviour
 
         yield return new WaitForSeconds(seconds);
         _randomOn = false;
-        print(seconds);
+        //print(seconds);
+    }
+
+    IEnumerator Disappear()
+    {
+        float opacity = 1.0f;
+        Debug.Log(_matBody.GetFloat("_Opacity"));
+        while(opacity > 0)
+        {
+            opacity = opacity - 0.1f;
+
+            yield return new WaitForSeconds(0.1f);
+            _matBody.SetFloat("_Opacity", opacity);
+        }
+        while (opacity < 1)
+        {
+            yield return new WaitForSeconds(0.1f);
+            opacity = opacity + 0.1f;
+            _matBody.SetFloat("_Opacity", opacity);
+        }
+        _matBody.SetFloat("_Opacity", 1.0f);
     }
     private enum GhostState
     {
