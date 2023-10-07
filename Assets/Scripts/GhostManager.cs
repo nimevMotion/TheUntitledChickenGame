@@ -11,17 +11,21 @@ public class GhostManager : MonoBehaviour
     private float m_speed = 1.0f;
     [SerializeField]
     private float m_speedRot = 1.0f;
+    [SerializeField]
+    private float m_health = 100.0f;
 
     private Animator _animator;
     private NavMeshAgent _agent;
     private Renderer _renderer;
     private Material _matBody;
+    private ParticleSystem _particleSystem;
     private GameObject _player;
     private Vector3[] _position;
 
     private FieldOfView _fov;
     private bool _randomOn = false;
     private bool _binState = false;
+    private bool _isDying = false;
     private int _index = 0;
 
     private GhostState _state;
@@ -46,6 +50,7 @@ public class GhostManager : MonoBehaviour
             _agent = GetComponent<NavMeshAgent>();
             _fov = GetComponent<FieldOfView>();
             _renderer = GetComponentInChildren<Renderer>();
+            _particleSystem = GetComponentInChildren<ParticleSystem>();
             _player = GameObject.FindWithTag("Player");
             _state = GhostState.idle;
 
@@ -74,6 +79,12 @@ public class GhostManager : MonoBehaviour
                 break;
             case GhostState.attack:
                 Attack();
+                break;
+            case GhostState.dying:
+                if(!_isDying)
+                {
+                    StartCoroutine("Die");
+                }
                 break;
         }
 
@@ -154,6 +165,32 @@ public class GhostManager : MonoBehaviour
             _matBody.SetFloat("_Opacity", opacity);
         }
         _matBody.SetFloat("_Opacity", 1.0f);
+    }
+
+    public void Damage(float damage)
+    {
+        m_health -= damage;
+        if(m_health <= 0.0f)
+        {
+            _state = GhostState.dying;
+        }
+
+    }
+    IEnumerator Die()
+    {
+        Debug.Log("He muerto");
+        _isDying = true;
+        _animator.SetTrigger("dying");
+        _particleSystem.Play();
+        float opacity = 1.0f;
+        while (opacity > 0)
+        {
+            opacity = opacity - 0.1f;
+
+            yield return new WaitForSeconds(0.3f);
+            _matBody.SetFloat("_Opacity", opacity);
+        }
+        Destroy(gameObject);
     }
     private enum GhostState
     {

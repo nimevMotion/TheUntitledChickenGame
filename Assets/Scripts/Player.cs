@@ -27,7 +27,10 @@ public class Player : MonoBehaviour
     private AudioClip[] m_SoundsPlayer;
     [SerializeField]
     private float speedRot;
-
+    [SerializeField]
+    private ParticleSystem m_MuzzleFlash;
+    [SerializeField]
+    private GameObject m_ImpactEffect;
     /*Private*/
     private Animator m_Animator;
     private AnimatorClipInfo[] m_CurrentClipInfo;
@@ -43,6 +46,7 @@ public class Player : MonoBehaviour
 
     private float horizontalInput;
     private float verticalInput;
+    private float range = 100.0f;
 
     private Vector3 newRotation;
 
@@ -51,6 +55,7 @@ public class Player : MonoBehaviour
     private bool isAimming = false;
     private bool haveGun = true;
     private bool isMoving = false;
+    private bool isSideWalk = false;
 
     // Start is called before the first frame update
     void Start()
@@ -77,35 +82,67 @@ public class Player : MonoBehaviour
         {
             horizontalInput = Input.GetAxis("Horizontal");
             verticalInput = Input.GetAxis("Vertical");
-            if(isRotating)
+            if (isRotating)
             {
                 horizontalInput = Input.GetAxis("Mouse X") * 0.5f;
             }
 
             Move();
 
+            //Aimming
+            if (Input.GetMouseButtonDown(1))
+            {
+                m_Animator.SetBool("isAimming", true);
+                isAimming = true;
+            }
+            else if (Input.GetMouseButtonUp(1))
+            {
+                m_Animator.SetBool("isAimming", false);
+                isAimming = false;
+            }
+
+            if (isAimming)
+            {
+                m_MainCamera.SetActive(false);
+                m_AimCamera.SetActive(true);
+            }
+            else
+            {
+                m_MainCamera.SetActive(true);
+                m_AimCamera.SetActive(false);
+            }
+            if (Input.GetMouseButtonDown(0))
+            {
+                //Debug.Log("Shoot");
+                StartCoroutine("Shoot");
+            }
+
+            if (Input.GetKeyDown(KeyCode.LeftControl))
+                isRunning = true;
+            else if(Input.GetKeyUp(KeyCode.LeftControl))
+                isRunning = false;
+
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+                isSideWalk = true;
+            else if (Input.GetKeyUp(KeyCode.LeftShift))
+                isSideWalk = false;
+
         }
-        //m_CurrentClipInfo = m_Animator.GetCurrentAnimatorClipInfo(0);
-        //clipName = m_CurrentClipInfo[0].clip.name;
 
-        //horizontalInput = Input.GetAxis("Horizontal");
-        //verticalInput = Input.GetAxis("Vertical");
+    }
 
-        //if((verticalInput != 0 || horizontalInput != 0) && !isMoving)
-        //{
-        //    m_audioPlayer.Play();
-        //}
+    private void Move()
+    {
+        //transform.Translate(Vector3.right * Time.deltaTime * speed * horizontalInput, Space.World);
+        if(isSideWalk)
+            transform.Translate(Vector3.right * Time.deltaTime * speed * horizontalInput);
+        else
+            transform.Rotate(Vector3.up * Time.deltaTime * speed * 50 * horizontalInput, Space.Self);
 
-        //if(verticalInput != 0 || horizontalInput != 0)
-        //    isMoving = true;
+        transform.Translate(Vector3.forward * Time.deltaTime * speed * verticalInput);
 
-        //newRotation = transform.localEulerAngles;
-        //newRotation.y = mplayerMesh.transform.localEulerAngles.y;
 
-        //transform.Translate(Vector3.forward * Time.deltaTime * speed * verticalInput);
-        //transform.Translate(Vector3.right * Time.deltaTime * speed * horizontalInput);
-
-        ////Inicia Controles y movimiento
+        //Inicia Controles y movimiento
         //if (verticalInput > 0.0f)
         //{
         //    if ((isRunning || haveGun) && !isAimming)
@@ -121,118 +158,34 @@ public class Player : MonoBehaviour
         //        m_Animator.SetInteger("State", -1);
         //}
 
-        //if (horizontalInput > 0.0f)
-        //    m_Animator.SetInteger("State", 3);
-        //else if (horizontalInput < 0.0f)
-        //    m_Animator.SetInteger("State", -3);
-
-        //if (horizontalInput == 0.0f && verticalInput == 0.0f)
-        //{
-        //    m_Animator.SetInteger("State", 0);
-        //    m_audioPlayer.Stop();
-        //    isMoving = false;
-        //}
-
-        //if (horizontalInput != 0.0f || verticalInput != 0.0f)
-        //{
-        //    if (Input.GetKeyDown(KeyCode.LeftShift))
-        //    {
-        //        isRunning = true;
-        //        speed = 5.0f;
-        //    }
-        //    else if (Input.GetKeyUp(KeyCode.LeftShift))
-        //    {
-        //        Debug.Log("Stop running..........................");
-        //        isRunning = false;
-        //        speed = 1.0f;
-        //    }
-        //}
-
-        //if (isRotating)
-        //{
-        //    RotatePlayer();
-        //}
-
-        ////Shoot
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    m_Animator.SetTrigger("shoot");
-        //    float x = Screen.width / 2;
-        //    float y = Screen.height / 2;
-
-        //    //Ray ray = m_Camera.ScreenPointToRay(new Vector3(x,y,0));
-
-        //    //Debug.DrawRay(mAim.position, ray.direction * 10, Color.yellow);
-        //    m_RBBullet = Instantiate(m_Bullet, m_AimOrigin.transform.position, Quaternion.identity)
-        //        .GetComponent<Rigidbody>();
-        //    //m_audioPlayer.clip = m_SoundsPlayer[0];
-        //    //m_audioPlayer.Play();
-        //    m_RBBullet.AddForce((mAim.position - m_AimOrigin.transform.position).normalized * m_shootForce,
-        //        ForceMode.Impulse);
-        //    }
-
-        //Aimming
-        if (Input.GetMouseButtonDown(1))
-        {
-            m_Animator.SetBool("isAimming", true);
-            isAimming = true;
-        }
-        else if (Input.GetMouseButtonUp(1))
-        {
-            m_Animator.SetBool("isAimming", false);
-            isAimming = false;
-        }
-
-        if (isAimming)
-        {
-            m_MainCamera.SetActive(false);
-            m_AimCamera.SetActive(true);
-        }
-        else
-        {
-            m_MainCamera.SetActive(true);
-            m_AimCamera.SetActive(false);
-        }
-    }
-
-    private void Move()
-    {
-        //transform.Translate(Vector3.right * Time.deltaTime * speed * horizontalInput, Space.World);
-        transform.Rotate(Vector3.up * Time.deltaTime * speed * 50 * horizontalInput, Space.Self);
-        transform.Translate(Vector3.forward * Time.deltaTime * speed * verticalInput);
-
-
-        //Inicia Controles y movimiento
         if (verticalInput > 0.0f)
         {
-            if ((isRunning || haveGun) && !isAimming)
+            if (isRunning)
                 m_Animator.SetInteger("State", 2);
             else
                 m_Animator.SetInteger("State", 1);
         }
         else if (verticalInput < 0.0f)
         {
-            if (isRunning || haveGun)
-                m_Animator.SetInteger("State", -2);
-            else
-                m_Animator.SetInteger("State", -1);
+            m_Animator.SetInteger("State", -1);
         }
 
-        if (horizontalInput > 0.0f)
-            m_Animator.SetInteger("State", 3);
-        else if (horizontalInput < 0.0f)
-            m_Animator.SetInteger("State", -3);
-
-        if (horizontalInput > 0.0f)
-            m_Animator.SetInteger("State", 3);
-        else if (horizontalInput < 0.0f)
-            m_Animator.SetInteger("State", -3);
+        if (horizontalInput != 0.0f)
+        { 
+            if (isSideWalk)
+            {
+                if (horizontalInput < 0.0f)
+                    m_Animator.SetInteger("State", -3);
+                else if (horizontalInput > 0.0f)
+                    m_Animator.SetInteger("State", 3);
+            }
+            else
+                m_Animator.SetInteger("State", 1);
+        }
 
         if (horizontalInput == 0.0f && verticalInput == 0.0f)
         {
             m_Animator.SetInteger("State", 0);
-            //m_audioPlayer.Stop();
-            //isMoving = false;
         }
     }
 
@@ -240,16 +193,28 @@ public class Player : MonoBehaviour
     {
         life = life + cure; 
     }
-    private void RotatePlayer()
+
+    IEnumerator Shoot()
     {
-        Debug.Log("Estoy rotando");
-        isRotating = false;
-        m_Animator.SetTrigger(turn);
-        int twist = turn.Equals("TurnLeft") ? 1 : -1;
-        Vector3 rotTarget = transform.rotation.eulerAngles + new Vector3(0.0f, -angleRot * twist, 0.0f);
-        var step = speedRot * Time.deltaTime;
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(rotTarget), step);
-        _lookX.rotate = false;
+        m_MuzzleFlash.Play();
+        
+        m_Animator.SetTrigger("shoot");
+        RaycastHit hit;
+
+        if(Physics.Raycast(m_MainCamera.transform.position, m_MainCamera.transform.forward, out hit, range))
+        {
+            Debug.Log(hit.transform.name);
+            GhostManager ghost = hit.transform.GetComponent<GhostManager>();
+            if(ghost != null)
+            {
+                ghost.Damage(50.0f);
+            }
+            Debug.Log("va a disparar");
+            yield return new WaitForSeconds(1.0f);
+            GameObject impactEffect = Instantiate(m_ImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
+            Destroy(impactEffect,1.0f);
+            Debug.Log("disparo");
+        }
     }
 
 }
