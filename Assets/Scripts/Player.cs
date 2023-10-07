@@ -209,11 +209,10 @@ public class Player : MonoBehaviour
             {
                 ghost.Damage(50.0f);
             }
-            Debug.Log("va a disparar");
+
             yield return new WaitForSeconds(1.0f);
             GameObject impactEffect = Instantiate(m_ImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
             Destroy(impactEffect,1.0f);
-            Debug.Log("disparo");
         }
     }
 
