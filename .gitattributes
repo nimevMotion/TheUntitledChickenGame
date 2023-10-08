@@ -1,3 +1,4 @@
 CA12_Forest_Birds_Small-Stream.wav filter=lfs diff=lfs merge=lfs -text
 *exr filter=lfs diff=lfs merge=lfs -text
 *.exr filter=lfs diff=lfs merge=lfs -text
+Assets/Materials/Skybox/093_hdrmaps_com_free.exr filter=lfs diff=lfs merge=lfs -text
