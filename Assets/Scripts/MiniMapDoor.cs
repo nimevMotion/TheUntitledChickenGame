@@ -22,20 +22,20 @@ public class MiniMapDoor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        switch(m_Door.doorState)
+        switch (m_Door.doorState)
         {
-            case 1:
+            case Door.DoorState.undiscovered:
                 gameObject.layer = layerMinimap;
                 break;
-                            
-            case 2:
+
+            case Door.DoorState.unlock:
                 gameObject.GetComponent<MeshRenderer>().material = m_UnlockMat;
                 break;
-            
-            case 3:
+
+            case Door.DoorState.block:
                 gameObject.GetComponent<MeshRenderer>().material = m_LockMat;
                 break;
-            
+
             default:
                 break;
         }

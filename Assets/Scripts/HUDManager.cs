@@ -6,7 +6,8 @@ using TMPro;
 
 public class HUDManager : MonoBehaviour
 {
-
+    [SerializeField]
+    private GameObject m_infoHUD; 
     [SerializeField]
     private TextMeshProUGUI m_numPollitosTxt;
     [SerializeField]
@@ -20,6 +21,8 @@ public class HUDManager : MonoBehaviour
     {
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         _player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        m_infoHUD.SetActive(false);
+
     }
 
     // Update is called once per frame
@@ -30,6 +33,18 @@ public class HUDManager : MonoBehaviour
         
     }
 
+    public void UpdateInfoHUD(string txt)
+    {
+        m_infoHUD.SetActive(true);
+        TMP_Text txtInfo = m_infoHUD.GetComponentInChildren<TextMeshProUGUI>();
+        txtInfo.text = txt;
+    }
 
+    public void DeactivateInfoHUD()
+    {
+        TMP_Text txtInfo = m_infoHUD.GetComponentInChildren<TextMeshProUGUI>();
+        txtInfo.text = "";
+        m_infoHUD.SetActive(false);
+    }
 
 }

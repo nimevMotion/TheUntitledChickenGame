@@ -31,6 +31,7 @@ public class Player : MonoBehaviour
     private ParticleSystem m_MuzzleFlash;
     [SerializeField]
     private GameObject m_ImpactEffect;
+
     /*Private*/
     private Animator m_Animator;
     private AnimatorClipInfo[] m_CurrentClipInfo;
@@ -40,6 +41,7 @@ public class Player : MonoBehaviour
     private Transform mplayerMesh;
 
     private GameManager _gameManager;
+    private HUDManager _hudManager;
     private LookX _lookX;
 
     private string clipName;
@@ -72,6 +74,7 @@ public class Player : MonoBehaviour
         _lookX = GetComponentInChildren<LookX>();
         m_audioPlayer = GetComponent<AudioSource>();
         _gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        _hudManager = GameObject.Find("UIManager").GetComponent<HUDManager>();
     }
 
     // Update is called once per frame
@@ -88,9 +91,30 @@ public class Player : MonoBehaviour
             }
 
             Move();
+            
+            RaycastHit hit;
+            if (Physics.Raycast(m_MainCamera.transform.position, m_MainCamera.transform.forward, out hit, 3.0f))
+            {
+                if(hit.transform.tag.Equals("Interactable"))
+                {
+                    GameObject hitGO = hit.transform.gameObject;
+                    if(hitGO.GetComponent<Door>() != null)
+                    {
+                        _hudManager.UpdateInfoHUD(hit.transform.GetComponent<Door>().GetDoorInfo());
+                    }
+                    
+                    Debug.Log(transform.forward);
+                    Debug.Log(hit.transform.forward);
+                }
+                else
+                {
+                    _hudManager.DeactivateInfoHUD();
+                }
+                
+            }
 
-            //Aimming
-            if (Input.GetMouseButtonDown(1))
+                //Aimming
+                if (Input.GetMouseButtonDown(1))
             {
                 m_Animator.SetBool("isAimming", true);
                 isAimming = true;
@@ -113,7 +137,6 @@ public class Player : MonoBehaviour
             }
             if (Input.GetMouseButtonDown(0))
             {
-                //Debug.Log("Shoot");
                 StartCoroutine("Shoot");
             }
 

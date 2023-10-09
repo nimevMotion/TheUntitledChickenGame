@@ -36,6 +36,9 @@ public class GameManager : MonoBehaviour
         _miniMapManager = GameObject.Find("MiniMapPlayer").GetComponent<MiniMapManager>();
         _player = GameObject.FindWithTag("Player").GetComponent<Player>();
 
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
         foreach(Transform child in m_Doors.transform)
         {
             Door tmpDoor =child.GetComponent<Door>();
@@ -61,6 +64,10 @@ public class GameManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.L))
             {
                 LoadGame();
+            }
+            if(Input.GetKeyDown(KeyCode.Escape))
+            {
+                Cursor.visible = true;
             }
         }
     }
