@@ -92,6 +92,7 @@ public class Player : MonoBehaviour
 
             Move();
             
+            //Deteccion de objetos
             RaycastHit hit;
             if (Physics.Raycast(m_MainCamera.transform.position, m_MainCamera.transform.forward, out hit, 3.0f))
             {
@@ -100,11 +101,17 @@ public class Player : MonoBehaviour
                     GameObject hitGO = hit.transform.gameObject;
                     if(hitGO.GetComponent<Door>() != null)
                     {
-                        _hudManager.UpdateInfoHUD(hit.transform.GetComponent<Door>().GetDoorInfo());
+                        _hudManager.UpdateInfoHUD(hit.transform.GetComponent<Door>().GetDoorInfo(hit.normal));
+
                     }
-                    
-                    Debug.Log(transform.forward);
-                    Debug.Log(hit.transform.forward);
+                    else if(hitGO.GetComponentInParent<Door>() != null)
+                    {
+                        _hudManager.UpdateInfoHUD(hit.transform.GetComponentInParent<Door>().GetDoorInfo(hit.normal));
+
+                    }
+
+                    //Debug.Log(hit.transform.forward);
+                    //Debug.Log(transform.forward);
                 }
                 else
                 {

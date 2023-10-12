@@ -31,6 +31,7 @@ public class Door : MonoBehaviour
     private GameObject _txtAbrir;
     private GameObject _txtBloqueo;
 
+    private Vector3 _hitNormal;
     private bool _isOpen = false;
     //private bool _isPlayerDetected = false;
 
@@ -200,31 +201,55 @@ public class Door : MonoBehaviour
     IEnumerator OpenDoor()
     {
         _isOpen = true;
-        m_UIDoor.SetActive(false);
-        m_animator.SetTrigger("open");
-        m_source.clip = m_AudioClips[0];
-        m_source.Play();
-        yield return new WaitForSeconds(5);
-        
-        m_animator.SetTrigger("close");
-        m_source.clip = m_AudioClips[1];
-        m_source.Play();
-        _isOpen = false;
-    }
+        bool open = false;
+        if (Vector3.Angle(_hitNormal,transform.forward) < 90.0f)
+        {
+            open = true;
+            //m_animator.SetTrigger("open");
+            //m_source.clip = m_AudioClips[0];
+            //m_source.Play();
+            //yield return new WaitForSeconds(5);
 
-    IEnumerator CloseDoor()
-    {
-        _isOpen = true;
-        m_UIDoor.SetActive(false);
-        m_animator.SetTrigger("close");
-        m_source.clip = m_AudioClips[0];
-        m_source.Play();
-        yield return new WaitForSeconds(5);
+            //m_animator.SetTrigger("close");
+            
+        }
+        //else
+        //{
 
-        m_animator.SetTrigger("open");
-        m_source.clip = m_AudioClips[1];
-        m_source.Play();
-        _isOpen = false;
+        //    m_animator.SetTrigger("close");
+        //    m_source.clip = m_AudioClips[0];
+        //    m_source.Play();
+        //    yield return new WaitForSeconds(5);
+
+        //    m_animator.SetTrigger("open");
+
+        //}
+        if(m_isBigDoor)
+        { 
+            m_animator.SetBool("inFront", open);
+            m_animator.SetTrigger("open");
+            m_source.clip = m_AudioClips[0];
+            m_source.Play();
+            yield return new WaitForSeconds(5);
+
+            m_animator.SetTrigger("close");
+            m_source.clip = m_AudioClips[1];
+            m_source.Play();
+            _isOpen = false;
+        }
+        else
+        {
+            m_animator.SetTrigger(open ? "open": "close");
+            m_source.clip = m_AudioClips[0];
+            m_source.Play();
+            yield return new WaitForSeconds(5);
+
+            m_animator.SetTrigger(open ? "close" : "open");
+            m_source.clip = m_AudioClips[1];
+            m_source.Play();
+            _isOpen = false;
+        }
+
     }
 
     public void GotKey()
@@ -238,8 +263,9 @@ public class Door : MonoBehaviour
         //_txtBloqueo.SetActive(false);
     }
 
-    public string GetDoorInfo()
+    public string GetDoorInfo(Vector3 hitNormal)
     {
+        _hitNormal = hitNormal;
         if (doorState == DoorState.undiscovered)
             doorState = DoorState.discovered;
         return _doorInfo;

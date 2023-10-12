@@ -24,7 +24,7 @@ public class MiniMapDoor : MonoBehaviour
     {
         switch (m_Door.doorState)
         {
-            case Door.DoorState.undiscovered:
+            case Door.DoorState.discovered:
                 gameObject.layer = layerMinimap;
                 break;
 
