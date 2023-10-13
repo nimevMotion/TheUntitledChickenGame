@@ -233,7 +233,6 @@ public class Player : MonoBehaviour
 
         if(Physics.Raycast(m_MainCamera.transform.position, m_MainCamera.transform.forward, out hit, range))
         {
-            Debug.Log(hit.transform.name);
             GhostManager ghost = hit.transform.GetComponent<GhostManager>();
             if(ghost != null)
             {

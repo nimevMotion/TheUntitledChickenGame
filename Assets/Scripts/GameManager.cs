@@ -90,10 +90,10 @@ public class GameManager : MonoBehaviour
         print("2" + gameData.pollitos);
         print("3" + gameData.scene);
         print("4");
-        Tuple<string, int>[] items = gameData.items;
+        List<Tuple<string, int, string>> items = gameData.items;
         List<Tuple<string, bool, bool>> doorstmp = gameData.doors;
         List<Tuple<string, bool>> maptmp = gameData.map;
-        for (int i = 0; i < items.Length; i++)
+        for (int i = 0; i < items.Count; i++)
         {
             print(items[i].Item1 + " " + items[i].Item2);
         }

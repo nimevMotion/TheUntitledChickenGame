@@ -8,7 +8,7 @@ public class GameData
     public int playerHealth;
     public int pollitos;
     public string scene;
-    public Tuple<string, int>[] items;
+    public List<Tuple<string, int, string>> items;
     public List<Tuple<string, bool, bool>> doors;
     public List<Tuple<string, bool>> map;
 

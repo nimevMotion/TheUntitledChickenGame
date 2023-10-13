@@ -11,13 +11,9 @@ public class Door : MonoBehaviour
     public bool isLock = false;
     public bool isPlayerDetected = false;
     public DoorState doorState;
-    //public int doorState = 0;
 
     [SerializeField]
     private AudioClip[] m_AudioClips;
-    
-    [SerializeField]
-    private GameObject m_UIDoor;
     [SerializeField]
     private bool m_isBigDoor = false;
     [SerializeField]
@@ -28,36 +24,14 @@ public class Door : MonoBehaviour
     private Animator m_animator;
     private AudioSource m_source;
 
-    private GameObject _txtAbrir;
-    private GameObject _txtBloqueo;
-
     private Vector3 _hitNormal;
-    private bool _isOpen = false;
-    //private bool _isPlayerDetected = false;
-
     private string _doorInfo;
-
-    private Ray rayfront;
-    private Ray rayBack;
-    private RaycastHit hitFront;
-    private RaycastHit hitBack;
 
     private void Start()
     {
         if(!m_secretDoor)
             m_animator = GetComponent<Animator>();
         m_source = GetComponent<AudioSource>();
-        
-        foreach (Transform child in m_UIDoor.transform)
-        {
-            if (child.name.Equals("Txt_Abrir"))
-                _txtAbrir = child.gameObject;
-            else if (child.name.Equals("Txt_Bloqueo"))
-                _txtBloqueo = child.gameObject;
-        }
-
-        _txtAbrir.SetActive(true);
-        _txtBloqueo.SetActive(false);
 
         _doorInfo = DOOR_0;
         doorState = DoorState.undiscovered;
@@ -91,6 +65,13 @@ public class Door : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.X))
                     {
                         StartCoroutine("OpenDoor");
+                    }
+                    else if(m_secretDoor)
+                    {
+                        float distance = Vector3.Distance(transform.position, m_OpenPostion.position);
+
+                        if (distance > 0.0f)
+                            transform.position = Vector3.MoveTowards(transform.position, m_OpenPostion.position, 0.05f);
                     }
                     break;
             }
@@ -200,30 +181,10 @@ public class Door : MonoBehaviour
 
     IEnumerator OpenDoor()
     {
-        _isOpen = true;
         bool open = false;
         if (Vector3.Angle(_hitNormal,transform.forward) < 90.0f)
-        {
             open = true;
-            //m_animator.SetTrigger("open");
-            //m_source.clip = m_AudioClips[0];
-            //m_source.Play();
-            //yield return new WaitForSeconds(5);
 
-            //m_animator.SetTrigger("close");
-            
-        }
-        //else
-        //{
-
-        //    m_animator.SetTrigger("close");
-        //    m_source.clip = m_AudioClips[0];
-        //    m_source.Play();
-        //    yield return new WaitForSeconds(5);
-
-        //    m_animator.SetTrigger("open");
-
-        //}
         if(m_isBigDoor)
         { 
             m_animator.SetBool("inFront", open);
@@ -235,7 +196,6 @@ public class Door : MonoBehaviour
             m_animator.SetTrigger("close");
             m_source.clip = m_AudioClips[1];
             m_source.Play();
-            _isOpen = false;
         }
         else
         {
@@ -247,7 +207,6 @@ public class Door : MonoBehaviour
             m_animator.SetTrigger(open ? "close" : "open");
             m_source.clip = m_AudioClips[1];
             m_source.Play();
-            _isOpen = false;
         }
 
     }
@@ -258,9 +217,6 @@ public class Door : MonoBehaviour
         canOpen = true;
         _doorInfo = DOOR_0;
         doorState = DoorState.unlock;
-
-        //_txtAbrir.SetActive(true);
-        //_txtBloqueo.SetActive(false);
     }
 
     public string GetDoorInfo(Vector3 hitNormal)
@@ -271,10 +227,12 @@ public class Door : MonoBehaviour
         return _doorInfo;
     }
 
-    public void SetDoorDirection(Transform player)
+    public void OpenSecretDoor()
     {
-        
+        m_secretDoor = true;
+        doorState = DoorState.unlock;
     }
+
     public enum DoorState
     {
         undiscovered,

@@ -33,12 +33,16 @@ public class UIManager : MonoBehaviour
         {
             m_PauseMenu.SetActive(true);
             m_HUD.gameObject.SetActive(false);
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.Confined;
 
         }
         else
         {
             m_PauseMenu.SetActive(false);
             m_HUD.gameObject.SetActive(true);
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
         }
     }
     public void ChangeScene(string scene)

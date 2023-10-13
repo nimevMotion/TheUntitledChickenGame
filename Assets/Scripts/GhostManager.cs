@@ -10,13 +10,13 @@ public class GhostManager : MonoBehaviour
     [SerializeField]
     private float m_speed = 1.0f;
     [SerializeField]
-    private float m_speedRot = 1.0f;
-    [SerializeField]
     private float m_health = 100.0f;
+    [SerializeField]
+    private GameObject m_item;
 
     private Animator _animator;
     private NavMeshAgent _agent;
-    private Renderer _renderer;
+    private Renderer[] _renderer;
     private Material _matBody;
     private ParticleSystem _particleSystem;
     private GameObject _player;
@@ -26,6 +26,7 @@ public class GhostManager : MonoBehaviour
     private bool _randomOn = false;
     private bool _binState = false;
     private bool _isDying = false;
+    private bool _hadItem = false;
     private int _index = 0;
 
     private GhostState _state;
@@ -49,18 +50,31 @@ public class GhostManager : MonoBehaviour
             _animator = GetComponentInChildren<Animator>();
             _agent = GetComponent<NavMeshAgent>();
             _fov = GetComponent<FieldOfView>();
-            _renderer = GetComponentInChildren<Renderer>();
+            _renderer = GetComponentsInChildren<Renderer>();
             _particleSystem = GetComponentInChildren<ParticleSystem>();
             _player = GameObject.FindWithTag("Player");
             _state = GhostState.idle;
+            
+            if(m_item!=null)
+                _hadItem = true;
 
-            foreach(var i in _renderer.materials)
+            foreach(var i in _renderer)
             {
-                if(i.name.Contains("Body"))
+                foreach(var j in i.materials)
                 {
-                    _matBody = i;
-                    break;
+                    if (i.name.Contains("Body") || i.name.Contains("Cuerpo"))
+                    {
+                        _matBody = j;
+                        break;
+                    }
                 }
+                if (_matBody != null)
+                    break;
+            }
+
+            if(_matBody == null)
+            {
+                Debug.Log("No hay material");
             }
 
         }
@@ -110,8 +124,6 @@ public class GhostManager : MonoBehaviour
         float distance = Vector3.Distance(transform.position, _position[_index]);
         if(distance <= 0)
         {
-            
-            Debug.Log("Cambia index " + _index);
             if (_index == m_Path.Length - 1)
             {
                 _index = 0;
@@ -144,13 +156,11 @@ public class GhostManager : MonoBehaviour
 
         yield return new WaitForSeconds(seconds);
         _randomOn = false;
-        //print(seconds);
     }
 
     IEnumerator Disappear()
     {
         float opacity = 1.0f;
-        Debug.Log(_matBody.GetFloat("_Opacity"));
         while(opacity > 0)
         {
             opacity = opacity - 0.1f;
@@ -178,7 +188,6 @@ public class GhostManager : MonoBehaviour
     }
     IEnumerator Die()
     {
-        Debug.Log("He muerto");
         _isDying = true;
         _animator.SetTrigger("dying");
         _particleSystem.Play();
@@ -190,7 +199,14 @@ public class GhostManager : MonoBehaviour
             yield return new WaitForSeconds(0.3f);
             _matBody.SetFloat("_Opacity", opacity);
         }
+
+        if (_hadItem)
+            Instantiate(m_item, transform.position + new Vector3(0.0f, 0.1f, 0.0f), Quaternion.Euler(90, 0, 90));
         Destroy(gameObject);
+    }
+    private void DropItem()
+    {
+
     }
     private enum GhostState
     {
