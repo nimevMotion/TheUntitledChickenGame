@@ -13,6 +13,8 @@ public class GhostManager : MonoBehaviour
     private float m_health = 100.0f;
     [SerializeField]
     private GameObject m_item;
+    [SerializeField]
+    private string m_ItemDescripcion;
 
     private Animator _animator;
     private NavMeshAgent _agent;
@@ -201,12 +203,12 @@ public class GhostManager : MonoBehaviour
         }
 
         if (_hadItem)
-            Instantiate(m_item, transform.position + new Vector3(0.0f, 0.1f, 0.0f), Quaternion.Euler(90, 0, 90));
+        { 
+            GameObject item = Instantiate(m_item, transform.position + new Vector3(0.0f, 0.1f, 0.0f), Quaternion.Euler(90, 0, 90));
+            Key key = item.GetComponent<Key>();
+            key.desc = m_ItemDescripcion;
+        }
         Destroy(gameObject);
-    }
-    private void DropItem()
-    {
-
     }
     private enum GhostState
     {

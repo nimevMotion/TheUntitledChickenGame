@@ -34,25 +34,27 @@ public class ItemManager : MonoBehaviour
 
     public void UpdateItems(Tuple<string, int, string> newItem)
     {
-        Debug.Log("Inicia la actualizacion de objetos");
         List<Tuple<string, int, string>> temp = new List<Tuple<string, int, string>>();
+        bool itemFound = false;
         temp.AddRange(items);
         items.Clear();
-        Debug.Log("a:" + temp.Count);
-        foreach(var i in temp)
+        items = new List<Tuple<string, int, string>>();
+
+        for(int i = 0; i < temp.Count; i++)
         {
-            if(i.Item1.Equals(newItem.Item1))
+            if(temp[i].Item1.Equals(newItem.Item1))
             {
                 items.Add(newItem);
-                Debug.Log("Se actualiza item:" + newItem.Item1);
+                itemFound = true;
+                break;
             }
             else
-            {
-                items.Add(i);
-                Debug.Log("Se encontro un nuevo item:" + newItem.Item1);
-            }
+                items.Add(temp[i]);
         }
-        Debug.Log("b:" + items.Count);
+
+        if (!itemFound)
+            items.Add(newItem);
+
         DrawItems();
     }
 

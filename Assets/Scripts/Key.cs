@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Key : MonoBehaviour
 {
+    public string desc = null;
+
     private ItemManager _itemManager;
 
     // Start is called before the first frame update
@@ -13,18 +15,11 @@ public class Key : MonoBehaviour
             Debug.Log("item");
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag.Equals("Player"))
         {
-            
-            _itemManager.UpdateItems(new Tuple<string, int, string>(_itemManager.KEY, 1, ""));
+            _itemManager.UpdateItems(new Tuple<string, int, string>(_itemManager.KEY, 1, desc));
             Destroy(gameObject); 
         }
     }
