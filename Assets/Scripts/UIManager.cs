@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 
 public class UIManager : MonoBehaviour
 {
@@ -29,21 +25,25 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        if (_gameManager.isGamePaused)
+        if(_gameManager.isGameOn)
         {
-            m_PauseMenu.SetActive(true);
-            m_HUD.gameObject.SetActive(false);
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.Confined;
+            if (_gameManager.isGamePaused)
+            {
+                m_PauseMenu.SetActive(true);
+                m_HUD.gameObject.SetActive(false);
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.Confined;
 
+            }
+            else
+            {
+                m_PauseMenu.SetActive(false);
+                m_HUD.gameObject.SetActive(true);
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
         }
-        else
-        {
-            m_PauseMenu.SetActive(false);
-            m_HUD.gameObject.SetActive(true);
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
-        }
+        
     }
     public void ChangeScene(string scene)
     {
@@ -78,18 +78,27 @@ public class UIManager : MonoBehaviour
     public void GetItems()
     {
         m_ItemsMenu.SetActive(true);
+        m_MapMenu.SetActive(false);
     }
 
     public void GetMap()
     {
         m_MapMenu.SetActive(true);
+        m_ItemsMenu.SetActive(false);
     }
 
     public void ResumeGame()
     {
         _gameManager.isGamePaused = false;
-        //m_HUD.gameObject.SetActive(true);
-        //m_PauseMenu.SetActive(false);
+        m_ItemsMenu.SetActive(false);
+        m_MapMenu.SetActive(false);
     }
+
+    public void ExitGame()
+    {
+        ChangeScene("Scene00_Intro");
+    }
+
+
 
 }

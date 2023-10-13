@@ -81,7 +81,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         //if(_gameManager.isGameOn)
-        if (true)
+        if (true && !_gameManager.isGamePaused)
         {
             horizontalInput = Input.GetAxis("Horizontal");
             verticalInput = Input.GetAxis("Vertical");
