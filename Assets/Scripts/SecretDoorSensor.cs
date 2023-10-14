@@ -5,7 +5,9 @@ using UnityEngine;
 public class SecretDoorSensor : MonoBehaviour
 {
     [SerializeField]
-    private AudioSource _audioSource;
+    private AudioSource m_audioSource;
+    [SerializeField]
+    private GameObject m_Ghost;
 
     private Door _door;
     private HUDManager _hudManager;
@@ -48,7 +50,12 @@ public class SecretDoorSensor : MonoBehaviour
 
     IEnumerator OpenSecretDoor()
     {
-        _audioSource.Play();
+        m_audioSource.Play();
+        if(m_Ghost != null)
+        {
+            GhostManager manager = m_Ghost.GetComponent<GhostManager>();
+            manager.state = GhostManager.GhostState.spooky;
+        }
         yield return new WaitForSeconds(2.5f);
         _door.doorState = Door.DoorState.unlock;
         _door.isPlayerDetected = true;

@@ -42,14 +42,11 @@ public class ItemManager : MonoBehaviour
 
         for(int i = 0; i < temp.Count; i++)
         {
-            if(temp[i].Item1.Equals(newItem.Item1))
+            if (temp[i].Item1.Equals(newItem.Item1))
             {
-                if (temp[i].Item2 < 1)
-                {
-                    items.Add(newItem);
-                    itemFound = true;
-                }
-                break;
+                if(temp[i].Item2 + newItem.Item2 >= 1)
+                    items.Add(new Tuple<string, int, string>(temp[i].Item1, temp[i].Item2 + newItem.Item2, temp[i].Item3));
+                itemFound = true;
             }
             else
                 items.Add(temp[i]);
@@ -63,7 +60,7 @@ public class ItemManager : MonoBehaviour
 
     private void DrawItems()
     {
-        Debug.Log(items.Count);
+        bool isFirst = true;
         _limWidth = (int)rectTransform.rect.width / 264;
         RectTransform initialRect = null;
 
@@ -91,42 +88,49 @@ public class ItemManager : MonoBehaviour
                     texInd = 0;
                     break;
             }
-            //Primer 
-            if (i == 0)
-            {
-                temp = Instantiate(m_itemPrefab, rectTransform);
-                tempItem = temp.GetComponent<Item>();
-                tempItem.itemName = items[i].Item1;
-                tempItem.itemSize = items[i].Item2;
-                tempItem.itemDesc = items[i].Item3;
 
-                initialRect = temp.GetComponent<RectTransform>();
-                initialRect.anchoredPosition = new Vector2(initialRect.anchoredPosition.x - (rectTransform.rect.width / 2) + offsetImg,
-                    initialRect.anchoredPosition.y + (rectTransform.rect.height / 2) - offsetImg);
+            temp = Instantiate(m_itemPrefab, rectTransform);
+            tempItem = temp.GetComponent<Item>();
 
-                temp.GetComponentInChildren<RawImage>().texture = m_textures[texInd];
-                tempTxt = temp.GetComponentInChildren<TMP_Text>();
-                tempTxt.text = items[i].Item1 + " " + (items[i].Item2 == -1 ? "\u221E" : items[i].Item2);
+            if (items[i].Item2 != 0)
+            { 
+                //Primer 
+                if (isFirst)
+                {
+                    tempItem.itemName = items[i].Item1;
+                    tempItem.itemSize = items[i].Item2;
+                    tempItem.itemDesc = items[i].Item3;
+
+                    initialRect = temp.GetComponent<RectTransform>();
+                    initialRect.anchoredPosition = new Vector2(initialRect.anchoredPosition.x - (rectTransform.rect.width / 2) + offsetImg,
+                        initialRect.anchoredPosition.y + (rectTransform.rect.height / 2) - offsetImg);
+
+                    temp.GetComponentInChildren<RawImage>().texture = m_textures[texInd];
+                    tempTxt = temp.GetComponentInChildren<TMP_Text>();
+                    tempTxt.text = items[i].Item1 + " " + (items[i].Item2 == -1 ? "\u221E" : items[i].Item2);
+                    isFirst = false;
+                }
+                else
+                {
+                    tempItem.itemName = items[i].Item1;
+                    tempItem.itemSize = items[i].Item2;
+                    tempItem.itemDesc = items[i].Item3;
+
+                    rect = temp.GetComponent<RectTransform>();
+                    rect.anchoredPosition = new Vector2(initialRect.anchoredPosition.x + offsetItemX * ((int)i % _limWidth),
+                        initialRect.anchoredPosition.y - offsetItemY * ((int)i / _limWidth));
+
+                    tempImg = temp.GetComponentInChildren<RawImage>();
+                    tempImg.texture = m_textures[texInd];
+
+                    tempTxt = temp.GetComponentInChildren<TMP_Text>();
+                    tempTxt.text = items[i].Item1 + " " + (items[i].Item2 == -1 ? "\u221E" : items[i].Item2);
+
+                }
             }
-            else
-            {
-                temp = Instantiate(m_itemPrefab, rectTransform);
-                tempItem = temp.GetComponent<Item>();
-                tempItem.itemName = items[i].Item1;
-                tempItem.itemSize = items[i].Item2;
-                tempItem.itemDesc = items[i].Item3;
 
-                rect = temp.GetComponent<RectTransform>();
-                rect.anchoredPosition = new Vector2(initialRect.anchoredPosition.x + offsetItemX * ((int)i % _limWidth),
-                    initialRect.anchoredPosition.y - offsetItemY * ((int)i / _limWidth));
-
-                tempImg = temp.GetComponentInChildren<RawImage>();
-                tempImg.texture = m_textures[texInd];
-
-                tempTxt = temp.GetComponentInChildren<TMP_Text>();
-                tempTxt.text = items[i].Item1 + " " + (items[i].Item2 == -1 ? "\u221E" : items[i].Item2);
-
-            }
         }
+            
+        
     }
 }

@@ -5,6 +5,8 @@ using UnityEngine.AI;
 
 public class GhostManager : MonoBehaviour
 {
+    public GhostState state;
+
     [SerializeField]
     private GameObject[] m_Path;
     [SerializeField]
@@ -15,6 +17,8 @@ public class GhostManager : MonoBehaviour
     private GameObject m_item;
     [SerializeField]
     private string m_ItemDescripcion;
+    [SerializeField]
+    private bool m_isSpooky = false;
 
     private Animator _animator;
     private NavMeshAgent _agent;
@@ -30,8 +34,6 @@ public class GhostManager : MonoBehaviour
     private bool _isDying = false;
     private bool _hadItem = false;
     private int _index = 0;
-
-    private GhostState _state;
 
     // Start is called before the first frame update
     void Start()
@@ -55,7 +57,11 @@ public class GhostManager : MonoBehaviour
             _renderer = GetComponentsInChildren<Renderer>();
             _particleSystem = GetComponentInChildren<ParticleSystem>();
             _player = GameObject.FindWithTag("Player");
-            _state = GhostState.idle;
+            
+            if (m_isSpooky)
+                state = GhostState.none;
+            else
+                state = GhostState.idle;
             
             if(m_item!=null)
                 _hadItem = true;
@@ -85,8 +91,14 @@ public class GhostManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        switch (_state)
+        switch (state)
         {
+            case GhostState.none:
+                _matBody.SetFloat("_Opacity", 0.0f);
+                break;
+            case GhostState.spooky:
+                StartCoroutine("Spooky");
+                break;
             case GhostState.idle:
                 _animator.SetBool("walk", false);
                 break;
@@ -104,14 +116,14 @@ public class GhostManager : MonoBehaviour
                 break;
         }
 
-        if (!_randomOn)
+        if (!_randomOn && !m_isSpooky)
         {
             StartCoroutine(GetCuckoo(Random.Range(3.0f, 8.0f)));
         }
 
-        if (_fov.canSeePlayer)
+        if (_fov.canSeePlayer && !m_isSpooky)
         {
-            _state = GhostState.attack;
+            state = GhostState.attack;
         }
         
         
@@ -152,9 +164,9 @@ public class GhostManager : MonoBehaviour
         _randomOn = true;
         _binState = !_binState;
         if (_binState)
-            _state = GhostState.idle;
+            state = GhostState.idle;
         else 
-            _state = GhostState.move;
+            state = GhostState.move;
 
         yield return new WaitForSeconds(seconds);
         _randomOn = false;
@@ -184,13 +196,14 @@ public class GhostManager : MonoBehaviour
         m_health -= damage;
         if(m_health <= 0.0f)
         {
-            _state = GhostState.dying;
+            state = GhostState.dying;
         }
 
     }
     IEnumerator Die()
     {
         _isDying = true;
+        _agent.enabled = false;
         _animator.SetTrigger("dying");
         _particleSystem.Play();
         float opacity = 1.0f;
@@ -205,17 +218,40 @@ public class GhostManager : MonoBehaviour
         if (_hadItem)
         { 
             GameObject item = Instantiate(m_item, transform.position + new Vector3(0.0f, 0.1f, 0.0f), Quaternion.Euler(90, 0, 90));
-            Key key = item.GetComponent<Key>();
+            GameItem key = item.GetComponent<GameItem>();
             key.desc = m_ItemDescripcion;
         }
         Destroy(gameObject);
     }
-    private enum GhostState
+    IEnumerator Spooky()
     {
+        float opacity = 1.0f;
+        while (opacity < 1)
+        {
+            yield return new WaitForSeconds(0.1f);
+            opacity = opacity + 0.1f;
+            _matBody.SetFloat("_Opacity", opacity);
+        }
+        transform.position = transform.position + (transform.forward * 0.01f);
+        while (opacity > 0)
+        {
+            opacity = opacity - 0.1f;
+
+            yield return new WaitForSeconds(0.3f);
+            _matBody.SetFloat("_Opacity", opacity);
+        }
+        _matBody.SetFloat("_Opacity", 0.0f);
+        transform.position = _position[0];
+        state = GhostState.move;
+    }
+    public enum GhostState
+    {
+        none,
         idle,
         attack,
         move,
-        dying
+        dying,
+        spooky
     }
 
 }

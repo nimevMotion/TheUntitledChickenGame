@@ -56,15 +56,15 @@ public class GameManager : MonoBehaviour
                 isGamePaused = true;
             }
 
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                SaveGame();
-            }
+            //if (Input.GetKeyDown(KeyCode.S))
+            //{
+            //    SaveGame();
+            //}
 
-            if (Input.GetKeyDown(KeyCode.L))
-            {
-                LoadGame();
-            }
+            //if (Input.GetKeyDown(KeyCode.L))
+            //{
+            //    LoadGame();
+            //}
             if(Input.GetKeyDown(KeyCode.Escape))
             {
                 Cursor.visible = true;

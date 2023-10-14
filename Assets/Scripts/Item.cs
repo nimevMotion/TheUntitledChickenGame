@@ -29,13 +29,12 @@ public class Item : MonoBehaviour
         switch (itemName)
         {
             case "Butter":
-                Debug.Log("Soy mantequilla");
                 break;
             case "Chocolate Bar":
                 _player.RecoverHealth(10);
                 //itemSize =itemSize - 1;
                 //_tmpText.text = itemName + " " + itemSize.ToString();
-                _itemManager.UpdateItems(new System.Tuple<string, int, string>(itemName, itemSize - 1, ""));
+                _itemManager.UpdateItems(new System.Tuple<string, int, string>(itemName, -1, ""));
                 break;
             case "Key":
                 Debug.Log(itemDesc);
@@ -43,7 +42,7 @@ public class Item : MonoBehaviour
                 if (door != null)
                 {
                     door.doorState = Door.DoorState._lock;
-                    _itemManager.UpdateItems(new System.Tuple<string, int, string>(itemName, 0, ""));
+                    _itemManager.UpdateItems(new System.Tuple<string, int, string>(itemName, -1, ""));
                 }
 
                 break;
