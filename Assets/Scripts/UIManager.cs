@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class UIManager : MonoBehaviour
 {
@@ -17,10 +18,12 @@ public class UIManager : MonoBehaviour
     private GameObject m_MapMenu;
 
     private GameManager _gameManager;
+    private ItemManager _itemManager;
     
     private void Start()
     {
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        _itemManager = GetComponent<ItemManager>();
     }
 
     private void Update()
@@ -98,7 +101,5 @@ public class UIManager : MonoBehaviour
     {
         ChangeScene("Scene00_Intro");
     }
-
-
 
 }

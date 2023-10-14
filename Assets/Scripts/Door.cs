@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class Door : MonoBehaviour
 {
-    public const string DOOR_0 = "Open Door\nPress X";
+    public const string DOOR_0 = "Open Door\nPress Q";
     public const string DOOR_1 = "Door is lock";
+    public const string DOOR_2 = "Press Q to use key";
 
     public bool canOpen = true;
     public bool isLock = false;
     public bool isPlayerDetected = false;
+    public bool isOpen = false;
     public DoorState doorState;
 
     [SerializeField]
@@ -23,8 +25,8 @@ public class Door : MonoBehaviour
 
     private Animator m_animator;
     private AudioSource m_source;
-
     private Vector3 _hitNormal;
+
     private string _doorInfo;
 
     private void Start()
@@ -43,7 +45,7 @@ public class Door : MonoBehaviour
             switch(doorState)
             {
                 case DoorState.discovered:
-                    if(Input.GetKeyDown(KeyCode.X))
+                    if(Input.GetKeyDown(KeyCode.Q))
                     {
                         if (canOpen)
                         {
@@ -62,119 +64,32 @@ public class Door : MonoBehaviour
                     }
                     break;
                 case DoorState.unlock:
-                    if (Input.GetKeyDown(KeyCode.X))
+                    if (Input.GetKeyDown(KeyCode.Q) && !m_secretDoor)
                     {
                         StartCoroutine("OpenDoor");
                     }
                     else if(m_secretDoor)
                     {
                         float distance = Vector3.Distance(transform.position, m_OpenPostion.position);
-
+                        
                         if (distance > 0.0f)
                             transform.position = Vector3.MoveTowards(transform.position, m_OpenPostion.position, 0.05f);
+                        if(isOpen)
+                        {
+                            isOpen = false;
+                            m_source.Play();
+                        }
+                    }
+                    break;
+
+                case DoorState._lock:
+                    _doorInfo = DOOR_2;
+                    if(Input.GetKeyDown(KeyCode.Q))
+                    {
+                        GotKey();
                     }
                     break;
             }
-        }
-
-        //if(m_isBigDoor)
-        //{
-        //    Vector3 pivote = transform.position + transform.up + transform.right * -2.5f;
-        //    rayfront = new Ray(pivote, transform.forward);
-        //    rayBack = new Ray(pivote, transform.forward * -1);
-
-        //    Debug.DrawRay(pivote, rayfront.direction * 5f, Color.yellow);
-        //    Debug.DrawRay(pivote, rayBack.direction * 5f, Color.blue);
-        //}else if(m_secretDoor)
-        //{
-        //    float distance = Vector3.Distance(transform.position, m_OpenPostion.position);
-
-        //    if(!isLock && distance > 0.0f)
-        //    {
-        //        transform.position = Vector3.MoveTowards(transform.position, m_OpenPostion.position, 0.05f);
-        //    }
-        //}
-        //else
-        //{
-        //    Vector3 pivote = transform.position + transform.up + transform.right * -0.5f;
-        //    rayfront = new Ray(pivote, transform.forward);
-        //    rayBack = new Ray(pivote, transform.forward * -1);
-
-        //    Debug.DrawRay(pivote, rayfront.direction * 0.5f, Color.yellow);
-        //    Debug.DrawRay(pivote, rayBack.direction * 0.5f, Color.blue);
-        //}
-
-
-        //if (!_isOpen && !m_secretDoor)
-        //{
-        //    if (Physics.Raycast(rayfront, out hitFront, 0.5f) &&
-        //        hitFront.collider.gameObject.tag.Equals("Player"))
-        //    {
-        //        doorState = 1;
-        //        m_UIDoor.SetActive(true);
-        //        _isPlayerDetected = true;
-        //        //Debug.Log("hit:" + hitFront.collider.gameObject.name);
-        //        if(Input.GetKeyDown(KeyCode.X))
-        //        {
-        //            if(canOpen)
-        //            {
-        //                doorState = 2;
-        //                StartCoroutine("OpenDoor");
-        //            }
-        //            else
-        //            {
-        //                m_source.clip = m_AudioClips[2];
-        //                m_source.Play();
-        //                if (!isLock)
-        //                {
-        //                    doorState = 3;
-        //                    isLock = true;
-        //                    _doorInfo = DOOR_1;
-        //                    _txtAbrir.SetActive(false);
-        //                    _txtBloqueo.SetActive(true);
-        //                }
-
-        //            }
-        //        }
-        //    }
-        //    else if (Physics.Raycast(rayBack, out hitBack, 0.5f) && 
-        //            hitBack.collider.gameObject.tag.Equals("Player"))
-        //    {
-        //        m_UIDoor.SetActive(true);
-        //       //Debug.Log("hit:" + hitBack.collider.gameObject.name);
-        //        if (Input.GetKeyDown(KeyCode.X))
-        //        {
-        //            doorState = 1;
-        //            if (canOpen)
-        //            {   doorState = 2;
-        //                StartCoroutine("CloseDoor");
-        //            }
-        //            else
-        //            {
-        //                m_source.clip = m_AudioClips[2];
-        //                m_source.Play();
-
-        //                if (!isLock)
-        //                {
-        //                    doorState = 3;
-        //                    isLock = true;
-        //                    _txtAbrir.SetActive(false);
-        //                    _txtBloqueo.SetActive(true);
-        //                }
-
-        //            }
-        //        }
-        //    }
-        //    else if(_isPlayerDetected)
-        //    {
-        //        //Debug.Log("desactivo mensaje de la puerta");
-        //        m_UIDoor.SetActive(false);
-        //    }
-        //}
-
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            GotKey();
         }
 
     }
@@ -211,7 +126,7 @@ public class Door : MonoBehaviour
 
     }
 
-    public void GotKey()
+    private void GotKey()
     {
         isLock = false;
         canOpen = true;
@@ -238,6 +153,7 @@ public class Door : MonoBehaviour
         undiscovered,
         discovered,
         block, 
-        unlock
+        unlock,
+        _lock
     }
 }

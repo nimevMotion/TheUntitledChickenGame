@@ -44,8 +44,11 @@ public class ItemManager : MonoBehaviour
         {
             if(temp[i].Item1.Equals(newItem.Item1))
             {
-                items.Add(newItem);
-                itemFound = true;
+                if (temp[i].Item2 < 1)
+                {
+                    items.Add(newItem);
+                    itemFound = true;
+                }
                 break;
             }
             else
@@ -95,6 +98,7 @@ public class ItemManager : MonoBehaviour
                 tempItem = temp.GetComponent<Item>();
                 tempItem.itemName = items[i].Item1;
                 tempItem.itemSize = items[i].Item2;
+                tempItem.itemDesc = items[i].Item3;
 
                 initialRect = temp.GetComponent<RectTransform>();
                 initialRect.anchoredPosition = new Vector2(initialRect.anchoredPosition.x - (rectTransform.rect.width / 2) + offsetImg,
@@ -110,6 +114,7 @@ public class ItemManager : MonoBehaviour
                 tempItem = temp.GetComponent<Item>();
                 tempItem.itemName = items[i].Item1;
                 tempItem.itemSize = items[i].Item2;
+                tempItem.itemDesc = items[i].Item3;
 
                 rect = temp.GetComponent<RectTransform>();
                 rect.anchoredPosition = new Vector2(initialRect.anchoredPosition.x + offsetItemX * ((int)i % _limWidth),
