@@ -9,7 +9,6 @@ public class Player : MonoBehaviour
     public float angleRot = 30.0f;
     public bool isRotating = false;
     public string turn = "";
-    public int chocolateBar;
     public int life = 50;
 
     /*Serialized var*/
@@ -236,7 +235,7 @@ public class Player : MonoBehaviour
             GhostManager ghost = hit.transform.GetComponent<GhostManager>();
             if(ghost != null)
             {
-                ghost.Damage(50.0f);
+                StartCoroutine(ghost.Damage(50.0f));
             }
 
             yield return new WaitForSeconds(1.0f);

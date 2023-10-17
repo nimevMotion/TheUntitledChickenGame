@@ -196,8 +196,9 @@ public class GhostManager : MonoBehaviour
         _matBody.SetFloat("_Opacity", 1.0f);
     }
 
-    public void Damage(float damage)
+    public IEnumerator Damage(float damage)
     {
+        yield return new WaitForSeconds(1.0f);
         m_health -= damage;
         if(m_health <= 0.0f)
         {
@@ -249,8 +250,6 @@ public class GhostManager : MonoBehaviour
             _matBody.SetFloat("_Opacity", opacity);
         }
         _matBody.SetFloat("_Opacity", 0.0f);
-        //transform.position = _position[0];
-        //state = GhostState.move;
         m_SpookyGhost.SetActive(true);
         Destroy(gameObject);
     }
