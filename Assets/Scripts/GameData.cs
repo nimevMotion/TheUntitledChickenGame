@@ -7,6 +7,9 @@ public class GameData
 {
     public int playerHealth;
     public int pollitos;
+    public float playerPosX;
+    public float playerPosY;
+    public float playerPosZ;
     public string scene;
     public List<Tuple<string, int, string>> items;
     public List<Tuple<string, bool, bool>> doors;
@@ -15,6 +18,9 @@ public class GameData
     public GameData(GameManager gameManager, Player player, ItemManager item, List<Tuple<string, bool>> mapData)
     {
         playerHealth = player.life;
+        playerPosX = gameManager.savePoint.x;
+        playerPosY = gameManager.savePoint.y;
+        playerPosZ = gameManager.savePoint.z;
         items = item.items;
         pollitos = gameManager.pollitos;
         scene = gameManager.activeScene;

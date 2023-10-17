@@ -162,7 +162,7 @@ GameObject:
   - component: {fileID: -8859087257856002803}
   m_Layer: 5
   m_Name: Item
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -248,7 +248,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: 
   itemSize: 0
-  btn: {fileID: 444297699852166701}
+  itemDesc: 
 --- !u!1 &6173707942250027354
 GameObject:
   m_ObjectHideFlags: 0

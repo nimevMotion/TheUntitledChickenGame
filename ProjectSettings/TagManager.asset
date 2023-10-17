@@ -9,6 +9,7 @@ TagManager:
   - Minimap
   - GameManager
   - Interactable
+  - Item
   layers:
   - Default
   - TransparentFX

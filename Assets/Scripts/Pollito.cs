@@ -19,6 +19,8 @@ public class Pollito : MonoBehaviour
         if(collision.gameObject.tag.Equals("Player"))
         {
             _gameManager.pollitos -= 1;
+            Player player = collision.gameObject.GetComponent<Player>();
+            player.FindChicken();
             Destroy(gameObject);
         }
     }

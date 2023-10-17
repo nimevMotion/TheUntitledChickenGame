@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4968525377406371693}
   - component: {fileID: 8312629053171239112}
   - component: {fileID: 6104791322773552130}
+  - component: {fileID: 1663245701}
   m_Layer: 0
   m_Name: ChocolateBar
   m_TagString: Untagged
@@ -84,6 +85,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &1663245701
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5744463564771581399}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4.5, y: 0.4079273, z: 2.4}
+  m_Center: {x: -0.0000000071215043, y: 0.20396347, z: 0.000000017192832}
 --- !u!1001 &7732264041451552149
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -101,11 +115,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4925366936238554, guid: 3d103d65aaa62f34e8e9ad872c5735fb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4925366936238554, guid: 3d103d65aaa62f34e8e9ad872c5735fb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.665
+      value: 0.83
       objectReference: {fileID: 0}
     - target: {fileID: 4925366936238554, guid: 3d103d65aaa62f34e8e9ad872c5735fb, type: 3}
       propertyPath: m_LocalPosition.z

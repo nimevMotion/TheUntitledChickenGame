@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class MiniMapManager : MonoBehaviour
 {
-    
-
     [SerializeField]
     private GameObject m_MiniMap;
 
@@ -37,5 +35,20 @@ public class MiniMapManager : MonoBehaviour
             map.Add(new Tuple<string, bool>(child.name, isVisble));
         }
         return map;
+    }
+
+    public void UpdateMapa(List<Tuple<string, bool>> minimap)
+    {
+        foreach(var i in minimap)
+        {
+            GameObject temp = GameObject.Find("/" + i.Item1);
+            if (temp != null)
+            {
+                if (i.Item2)
+                    temp.layer = gameObject.layer;
+            }
+            else
+                Debug.LogError("No se encontro el objeto");
+        }
     }
 }

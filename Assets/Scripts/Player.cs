@@ -28,8 +28,6 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float speedRot;
     [SerializeField]
-    private ParticleSystem m_MuzzleFlash;
-    [SerializeField]
     private GameObject m_ImpactEffect;
 
     /*Private*/
@@ -43,14 +41,13 @@ public class Player : MonoBehaviour
     private GameManager _gameManager;
     private HUDManager _hudManager;
     private LookX _lookX;
+    private ParticleSystem _experienceGain;
 
     private string clipName;
 
     private float horizontalInput;
     private float verticalInput;
     private float range = 100.0f;
-
-    private Vector3 newRotation;
 
    // private bool m_IsPlaying = false;
     private bool isRunning = false;
@@ -68,6 +65,8 @@ public class Player : MonoBehaviour
                 mplayerMesh = child;
             else if (child.name.Equals("Aim"))
                 mAim = child;
+            else if(child.name.Equals("FX_ExperienceGain_01"))
+                _experienceGain = child.gameObject.GetComponent<ParticleSystem>();
         }
 
         m_Animator = GetComponentInChildren<Animator>();
@@ -90,8 +89,16 @@ public class Player : MonoBehaviour
                 horizontalInput = Input.GetAxis("Mouse X") * 0.5f;
             }
 
-            Move();
-            
+            if (horizontalInput == 0.0f && verticalInput == 0.0f)
+            {
+                m_Animator.SetInteger("State", 0);
+                m_audioPlayer.Pause();
+            }
+            else
+            {
+                Move();
+            }
+
             //Deteccion de objetos
             RaycastHit hit;
             if (Physics.Raycast(m_MainCamera.transform.position, m_MainCamera.transform.forward, out hit, 3.0f))
@@ -109,19 +116,16 @@ public class Player : MonoBehaviour
                         _hudManager.UpdateInfoHUD(hit.transform.GetComponentInParent<Door>().GetDoorInfo(hit.normal));
 
                     }
-
-                    //Debug.Log(hit.transform.forward);
-                    //Debug.Log(transform.forward);
                 }
                 else
                 {
                     _hudManager.DeactivateInfoHUD();
                 }
-                
+
             }
 
-                //Aimming
-                if (Input.GetMouseButtonDown(1))
+            //Aimming
+            if (Input.GetMouseButtonDown(1))
             {
                 m_Animator.SetBool("isAimming", true);
                 isAimming = true;
@@ -131,6 +135,22 @@ public class Player : MonoBehaviour
                 m_Animator.SetBool("isAimming", false);
                 isAimming = false;
             }
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                StartCoroutine("Shoot");
+            }
+
+            if (Input.GetKeyDown(KeyCode.LeftControl))
+                isRunning = true;
+            else if (Input.GetKeyUp(KeyCode.LeftControl))
+                isRunning = false;
+
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+                isSideWalk = true;
+            else if (Input.GetKeyUp(KeyCode.LeftShift))
+                isSideWalk = false;
+
 
             if (isAimming)
             {
@@ -142,28 +162,20 @@ public class Player : MonoBehaviour
                 m_MainCamera.SetActive(true);
                 m_AimCamera.SetActive(false);
             }
-            if (Input.GetMouseButtonDown(0))
-            {
-                StartCoroutine("Shoot");
-            }
 
-            if (Input.GetKeyDown(KeyCode.LeftControl))
-                isRunning = true;
-            else if(Input.GetKeyUp(KeyCode.LeftControl))
-                isRunning = false;
-
-            if (Input.GetKeyDown(KeyCode.LeftShift))
-                isSideWalk = true;
-            else if (Input.GetKeyUp(KeyCode.LeftShift))
-                isSideWalk = false;
-
+            if (isRunning)
+                speed = 2.0f;
+            else
+                speed = 1.0f;
         }
 
     }
 
     private void Move()
     {
-        //transform.Translate(Vector3.right * Time.deltaTime * speed * horizontalInput, Space.World);
+        if (!m_audioPlayer.isPlaying)
+            m_audioPlayer.Play();
+
         if(isSideWalk)
             transform.Translate(Vector3.right * Time.deltaTime * speed * horizontalInput);
         else
@@ -173,21 +185,6 @@ public class Player : MonoBehaviour
 
 
         //Inicia Controles y movimiento
-        //if (verticalInput > 0.0f)
-        //{
-        //    if ((isRunning || haveGun) && !isAimming)
-        //        m_Animator.SetInteger("State", 2);
-        //    else
-        //        m_Animator.SetInteger("State", 1);
-        //}
-        //else if (verticalInput < 0.0f)
-        //{
-        //    if (isRunning || haveGun)
-        //        m_Animator.SetInteger("State", -2);
-        //    else
-        //        m_Animator.SetInteger("State", -1);
-        //}
-
         if (verticalInput > 0.0f)
         {
             if (isRunning)
@@ -197,37 +194,40 @@ public class Player : MonoBehaviour
         }
         else if (verticalInput < 0.0f)
         {
-            m_Animator.SetInteger("State", -1);
+            if (isRunning)
+                m_Animator.SetInteger("State", -2);
+            else
+                m_Animator.SetInteger("State", -1);
         }
 
         if (horizontalInput != 0.0f)
         { 
             if (isSideWalk)
             {
+                speed = 1.0f;
                 if (horizontalInput < 0.0f)
                     m_Animator.SetInteger("State", -3);
                 else if (horizontalInput > 0.0f)
                     m_Animator.SetInteger("State", 3);
             }
             else
-                m_Animator.SetInteger("State", 1);
+            {
+                if (isRunning)
+                    m_Animator.SetInteger("State", 2);
+                else
+                {
+                    speed = 2.0f;
+                    m_Animator.SetInteger("State", 1);
+                }
+            }
+                
         }
 
-        if (horizontalInput == 0.0f && verticalInput == 0.0f)
-        {
-            m_Animator.SetInteger("State", 0);
-        }
-    }
-
-    public void RecoverHealth(int cure)
-    {
-        life = life + cure; 
+        
     }
 
     IEnumerator Shoot()
     {
-        m_MuzzleFlash.Play();
-        
         m_Animator.SetTrigger("shoot");
         RaycastHit hit;
 
@@ -240,9 +240,19 @@ public class Player : MonoBehaviour
             }
 
             yield return new WaitForSeconds(1.0f);
-            GameObject impactEffect = Instantiate(m_ImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
-            Destroy(impactEffect,1.0f);
+            Instantiate(m_ImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
         }
+    }
+
+    public void RecoverHealth(int cure)
+    {
+        life = life + cure;
+    }
+
+    public void FindChicken()
+    {
+        _experienceGain.Play();
+        m_audioPlayer.PlayOneShot(m_SoundsPlayer[1]);
     }
 
 }

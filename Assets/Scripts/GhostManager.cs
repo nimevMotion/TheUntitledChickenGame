@@ -19,12 +19,17 @@ public class GhostManager : MonoBehaviour
     private string m_ItemDescripcion;
     [SerializeField]
     private bool m_isSpooky = false;
+    [SerializeField]
+    private GameObject m_SpookyGhost;
+    [SerializeField]
+    private AudioClip m_DyingAudio;
 
     private Animator _animator;
     private NavMeshAgent _agent;
     private Renderer[] _renderer;
     private Material _matBody;
     private ParticleSystem _particleSystem;
+    private AudioSource _audioSource;
     private GameObject _player;
     private Vector3[] _position;
 
@@ -56,6 +61,7 @@ public class GhostManager : MonoBehaviour
             _fov = GetComponent<FieldOfView>();
             _renderer = GetComponentsInChildren<Renderer>();
             _particleSystem = GetComponentInChildren<ParticleSystem>();
+            _audioSource = GetComponent<AudioSource>();
             _player = GameObject.FindWithTag("Player");
             
             if (m_isSpooky)
@@ -97,7 +103,8 @@ public class GhostManager : MonoBehaviour
                 _matBody.SetFloat("_Opacity", 0.0f);
                 break;
             case GhostState.spooky:
-                StartCoroutine("Spooky");
+                if(m_isSpooky)
+                    StartCoroutine("Spooky");
                 break;
             case GhostState.idle:
                 _animator.SetBool("walk", false);
@@ -124,9 +131,7 @@ public class GhostManager : MonoBehaviour
         if (_fov.canSeePlayer && !m_isSpooky)
         {
             state = GhostState.attack;
-        }
-        
-        
+        }        
     }
 
     private void Move()
@@ -203,8 +208,9 @@ public class GhostManager : MonoBehaviour
     IEnumerator Die()
     {
         _isDying = true;
-        _agent.enabled = false;
+        _agent.isStopped = true;
         _animator.SetTrigger("dying");
+        
         _particleSystem.Play();
         float opacity = 1.0f;
         while (opacity > 0)
@@ -214,7 +220,7 @@ public class GhostManager : MonoBehaviour
             yield return new WaitForSeconds(0.3f);
             _matBody.SetFloat("_Opacity", opacity);
         }
-
+        _audioSource.PlayOneShot(m_DyingAudio);
         if (_hadItem)
         { 
             GameObject item = Instantiate(m_item, transform.position + new Vector3(0.0f, 0.1f, 0.0f), Quaternion.Euler(90, 0, 90));
@@ -225,24 +231,28 @@ public class GhostManager : MonoBehaviour
     }
     IEnumerator Spooky()
     {
-        float opacity = 1.0f;
+        Debug.Log("spooky");
+        float opacity = 0.0f;
+        m_isSpooky = false;
+        state = GhostState.none;
         while (opacity < 1)
         {
             yield return new WaitForSeconds(0.1f);
             opacity = opacity + 0.1f;
             _matBody.SetFloat("_Opacity", opacity);
         }
-        transform.position = transform.position + (transform.forward * 0.01f);
+        transform.position = transform.position + (transform.forward * 0.8f);
         while (opacity > 0)
         {
             opacity = opacity - 0.1f;
-
             yield return new WaitForSeconds(0.3f);
             _matBody.SetFloat("_Opacity", opacity);
         }
         _matBody.SetFloat("_Opacity", 0.0f);
-        transform.position = _position[0];
-        state = GhostState.move;
+        //transform.position = _position[0];
+        //state = GhostState.move;
+        m_SpookyGhost.SetActive(true);
+        Destroy(gameObject);
     }
     public enum GhostState
     {

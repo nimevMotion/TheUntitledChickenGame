@@ -9,7 +9,8 @@ public class GameManager : MonoBehaviour
     public bool isGameOver;
     public bool isGamePaused;
     public bool isGameOn = true;
-
+    public Vector3 savePoint;
+    
     public List<Tuple<string, bool, bool>> doors = new List<Tuple<string, bool,bool>>();
 
     public int pollitos;
@@ -20,6 +21,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject m_Doors;
     [SerializeField]
+    public GameObject[] m_SavePoints;
+    [SerializeField]
     private ItemManager _itemManager;
 
     private Player _player;
@@ -29,22 +32,32 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        m_Cameras[0].SetActive(false);
-        m_Cameras[0].SetActive(true);
         activeScene = SceneManager.GetActiveScene().name;
-
-        _miniMapManager = GameObject.Find("MiniMapPlayer").GetComponent<MiniMapManager>();
-        _player = GameObject.FindWithTag("Player").GetComponent<Player>();
-
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
-        foreach(Transform child in m_Doors.transform)
+        if (!activeScene.Equals("Scene00_Intro"))
         {
-            Door tmpDoor =child.GetComponent<Door>();
-            doors.Add(new Tuple<string, bool, bool>(child.name, tmpDoor.canOpen, tmpDoor.isLock));
-        }
+            isGameOn = true;
+            m_Cameras[0].SetActive(false);
+            m_Cameras[0].SetActive(true);
 
+            _miniMapManager = GameObject.Find("MiniMapPlayer").GetComponent<MiniMapManager>();
+            _player = GameObject.FindWithTag("Player").GetComponent<Player>();
+            _itemManager = GameObject.Find("UIManager").GetComponent<ItemManager>();
+
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+
+            if (!SaveManager.isNewGame)
+            {
+                LoadGame();
+            }
+            else
+            {
+                GetDoors();
+            }
+        }
+        else
+            isGameOn = false;
+        
     }
 
     private void Update()
@@ -56,15 +69,6 @@ public class GameManager : MonoBehaviour
                 isGamePaused = true;
             }
 
-            //if (Input.GetKeyDown(KeyCode.S))
-            //{
-            //    SaveGame();
-            //}
-
-            //if (Input.GetKeyDown(KeyCode.L))
-            //{
-            //    LoadGame();
-            //}
             if(Input.GetKeyDown(KeyCode.Escape))
             {
                 Cursor.visible = true;
@@ -72,14 +76,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void SaveGame()
+    public void SaveGame(int index)
     {
+        savePoint = m_SavePoints[index].transform.position;
         SaveManager.SaveGameData(this, _player, _itemManager, _miniMapManager.GetData());
     }
 
-    private void LoadGame()
+    public void LoadGame()
     {
+        //printData(_gameData);
         _gameData = SaveManager.LoadGameData();
+
+        _player.life = _gameData.playerHealth;
+        Vector3 posPlayer = new Vector3(_gameData.playerPosX, _gameData.playerPosY, _gameData.playerPosZ);
+        _player.transform.position = posPlayer;
+        _itemManager.UpdateItems(_gameData.items);
+        pollitos = _gameData.pollitos;
+        _miniMapManager.UpdateMapa(_gameData.map);
+        UpdateDoors(_gameData.doors);
+
         Debug.Log("Se ha cargado  el juego");
         printData(_gameData);
     }
@@ -107,5 +122,22 @@ public class GameManager : MonoBehaviour
         {
             print(i.Item1 + " " + i.Item2);
         }
+    }
+
+    private void GetDoors()
+    {
+        doors.Clear();
+
+        foreach (Transform child in m_Doors.transform)
+        {
+            Door tmpDoor = child.GetComponent<Door>();
+            doors.Add(new Tuple<string, bool, bool>(child.name, tmpDoor.canOpen, tmpDoor.isLock));
+        }
+    }
+
+    private void UpdateDoors(List<Tuple<string, bool, bool>> newDoors)
+    {
+        doors.Clear();
+        doors.AddRange(newDoors);
     }
 }

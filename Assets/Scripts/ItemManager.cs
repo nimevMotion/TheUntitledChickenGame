@@ -63,6 +63,12 @@ public class ItemManager : MonoBehaviour
         bool isFirst = true;
         _limWidth = (int)rectTransform.rect.width / 264;
         RectTransform initialRect = null;
+        
+        GameObject[] itemsTemp = GameObject.FindGameObjectsWithTag("Item");
+        foreach(var i in itemsTemp)
+        {
+            Destroy(i);
+        }
 
         for (int i = 0; i < items.Count; i++)
         {
@@ -130,7 +136,12 @@ public class ItemManager : MonoBehaviour
             }
 
         }
-            
-        
+    }
+
+    public void UpdateItems(List<Tuple<string, int, string>> newItems)
+    {
+        items.Clear();
+        items.AddRange(newItems);
+        DrawItems();
     }
 }

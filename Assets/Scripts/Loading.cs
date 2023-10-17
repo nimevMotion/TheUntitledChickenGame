@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,6 +7,7 @@ public class Loading : MonoBehaviour
     public GameObject button;
 
     AsyncOperation operacion;
+
     private void Start()
     {
         string nivelACargar = LoadScene.siguienteNivel;

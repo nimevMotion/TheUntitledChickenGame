@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -7,6 +7,8 @@ public class UIManager : MonoBehaviour
     public GameObject panelSettings;
     public GameObject enterButton;
     public GameObject pollito;
+    public Button saveButton;
+    public int index;
 
     [SerializeField]
     private GameObject m_ItemsMenu;
@@ -16,14 +18,19 @@ public class UIManager : MonoBehaviour
     private GameObject m_HUD;
     [SerializeField]
     private GameObject m_MapMenu;
+    [SerializeField]
+    private GameObject m_SaveMenu;
 
     private GameManager _gameManager;
+    private GameData _gameData;
     private ItemManager _itemManager;
+    private AudioSource _audioSource;
     
     private void Start()
     {
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         _itemManager = GetComponent<ItemManager>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -36,7 +43,6 @@ public class UIManager : MonoBehaviour
                 m_HUD.gameObject.SetActive(false);
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.Confined;
-
             }
             else
             {
@@ -48,7 +54,7 @@ public class UIManager : MonoBehaviour
         }
         
     }
-    public void ChangeScene(string scene)
+    private void ChangeScene(string scene)
     {
         LoadScene.NivelACargar(scene);
     }
@@ -82,12 +88,14 @@ public class UIManager : MonoBehaviour
     {
         m_ItemsMenu.SetActive(true);
         m_MapMenu.SetActive(false);
+        m_SaveMenu.SetActive(false);
     }
 
     public void GetMap()
     {
         m_MapMenu.SetActive(true);
         m_ItemsMenu.SetActive(false);
+        m_SaveMenu.SetActive(false);
     }
 
     public void ResumeGame()
@@ -95,11 +103,38 @@ public class UIManager : MonoBehaviour
         _gameManager.isGamePaused = false;
         m_ItemsMenu.SetActive(false);
         m_MapMenu.SetActive(false);
+        m_SaveMenu.SetActive(false);
     }
 
     public void ExitGame()
     {
         ChangeScene("Scene00_Intro");
+    }
+
+    public void ClickSound()
+    {
+        _audioSource.Play();
+    }
+
+    public void SaveGame()
+    {
+        m_MapMenu.SetActive(false);
+        m_ItemsMenu.SetActive(false);
+        _gameManager.SaveGame(index);
+        m_SaveMenu.SetActive(true);
+    }
+
+    public void LoadGame()
+    {
+        SaveManager.isNewGame = false;
+        _gameData = SaveManager.LoadGameData();
+        ChangeScene(_gameData.scene);
+    }
+
+    public void NewGame()
+    {
+        SaveManager.isNewGame = true;
+        ChangeScene(_gameData.scene);
     }
 
 }
