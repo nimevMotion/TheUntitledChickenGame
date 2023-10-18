@@ -233,12 +233,17 @@ public class Player : MonoBehaviour
         if(Physics.Raycast(m_MainCamera.transform.position, m_MainCamera.transform.forward, out hit, range))
         {
             GhostManager ghost = hit.transform.GetComponent<GhostManager>();
+            Pollito pollito = hit.transform.GetComponent<Pollito>();
+
             if(ghost != null)
             {
                 StartCoroutine(ghost.Damage(50.0f));
+                yield return new WaitForSeconds(1.0f);
             }
-
-            yield return new WaitForSeconds(1.0f);
+            else if(pollito != null)
+            {
+                pollito.GetChicken();
+            }
             Instantiate(m_ImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
         }
     }
