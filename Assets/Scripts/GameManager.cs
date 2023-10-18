@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -33,7 +32,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         activeScene = SceneManager.GetActiveScene().name;
-        if (!activeScene.Equals("Scene00_Intro"))
+        if (!activeScene.Equals("Scene00_Intro") && !activeScene.Equals("SceneA_LoadScene"))
         {
             isGameOn = true;
             m_Cameras[0].SetActive(false);

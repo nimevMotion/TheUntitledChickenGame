@@ -395,6 +395,60 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 338293206}
   m_CullTransparentMesh: 1
+--- !u!1 &647752220
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 647752222}
+  - component: {fileID: 647752221}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &647752221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 647752220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 289478c341e90e74d976ef50da250937, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGameOver: 0
+  isGamePaused: 0
+  isGameOn: 0
+  savePoint: {x: 0, y: 0, z: 0}
+  pollitos: 0
+  activeScene: 
+  m_Cameras: []
+  m_Doors: {fileID: 0}
+  m_SavePoints: []
+  _itemManager: {fileID: 0}
+--- !u!4 &647752222
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 647752220}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 876.3962, y: 476.2842, z: 0.0067576985}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &764743972
 GameObject:
   m_ObjectHideFlags: 0
@@ -684,8 +738,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 4.2681274, y: -7.1135254}
+  m_SizeDelta: {x: 36.9899, y: 59.7526}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &816716031
 MonoBehaviour:
@@ -1272,6 +1326,13 @@ MonoBehaviour:
   panelSettings: {fileID: 0}
   enterButton: {fileID: 0}
   pollito: {fileID: 0}
+  saveButton: {fileID: 0}
+  index: 0
+  m_ItemsMenu: {fileID: 0}
+  m_PauseMenu: {fileID: 0}
+  m_HUD: {fileID: 0}
+  m_MapMenu: {fileID: 0}
+  m_SaveMenu: {fileID: 0}
 --- !u!4 &1541994887
 Transform:
   m_ObjectHideFlags: 0

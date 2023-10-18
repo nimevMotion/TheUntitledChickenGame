@@ -2097,7 +2097,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isGameOver: 0
   isGamePaused: 0
-  isGameOn: 1
+  isGameOn: 0
   savePoint: {x: 0, y: 0, z: 0}
   pollitos: 0
   activeScene: 
@@ -3331,7 +3331,7 @@ PrefabInstance:
     - target: {fileID: 2081387809736609952, guid: d01376c2c8a04e84285351074f6b3f46,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2081387809736609952, guid: d01376c2c8a04e84285351074f6b3f46,
         type: 3}
@@ -3356,7 +3356,7 @@ PrefabInstance:
     - target: {fileID: 2081387809736609952, guid: d01376c2c8a04e84285351074f6b3f46,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ChangeScene
+      value: NewGame
       objectReference: {fileID: 0}
     - target: {fileID: 2081387809736609952, guid: d01376c2c8a04e84285351074f6b3f46,
         type: 3}

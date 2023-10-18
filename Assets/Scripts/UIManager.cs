@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -25,12 +26,14 @@ public class UIManager : MonoBehaviour
     private GameData _gameData;
     private ItemManager _itemManager;
     private AudioSource _audioSource;
+    private bool _isGameOn = false;
     
     private void Start()
     {
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         _itemManager = GetComponent<ItemManager>();
         _audioSource = GetComponent<AudioSource>();
+        
     }
 
     private void Update()
@@ -134,7 +137,7 @@ public class UIManager : MonoBehaviour
     public void NewGame()
     {
         SaveManager.isNewGame = true;
-        ChangeScene(_gameData.scene);
+        ChangeScene("Scene01_Nivel0");
     }
 
 }
