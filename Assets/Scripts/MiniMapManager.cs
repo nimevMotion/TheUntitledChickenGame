@@ -39,16 +39,19 @@ public class MiniMapManager : MonoBehaviour
 
     public void UpdateMapa(List<Tuple<string, bool>> minimap)
     {
+        Transform[] goList = gameObject.GetComponentsInChildren<Transform>();
+        
         foreach(var i in minimap)
-        {
-            GameObject temp = GameObject.Find("/" + i.Item1);
-            if (temp != null)
+            foreach (Transform child in m_MiniMap.transform)
             {
-                if (i.Item2)
-                    temp.layer = gameObject.layer;
+                if (child.name.Equals(i.Item1))
+                {
+                    if (i.Item2)
+                    {
+                        child.gameObject.layer = gameObject.layer;
+                        break;
+                    }
+                }
             }
-            else
-                Debug.LogError("No se encontro el objeto");
-        }
     }
 }

@@ -3,6 +3,9 @@ using UnityEngine;
 public class DoorSensor : MonoBehaviour
 {
     private Door _door;
+    
+    [SerializeField]
+    private bool _isFinal;
 
     private void Start()
     {
@@ -14,6 +17,10 @@ public class DoorSensor : MonoBehaviour
         if(other.transform.tag.Equals("Player"))
         {
             _door.isPlayerDetected = true;
+            if(_isFinal)
+            {
+                _door.CanOpenFinalDoor();
+            }
         }
     }
 

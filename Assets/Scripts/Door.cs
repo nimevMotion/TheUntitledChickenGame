@@ -7,6 +7,7 @@ public class Door : MonoBehaviour
     public const string DOOR_0 = "Open Door\nPress Q";
     public const string DOOR_1 = "Door is lock";
     public const string DOOR_2 = "Press Q to use key";
+    public const string DOOR_3 = "Can't open door\nFind all <b>chicks</b>";
 
     public bool canOpen = true;
     public bool isLock = false;
@@ -23,6 +24,7 @@ public class Door : MonoBehaviour
     [SerializeField]
     private bool m_secretDoor = false;
 
+    private GameManager _gameManager;
     private Animator m_animator;
     private AudioSource m_source;
     private Vector3 _hitNormal;
@@ -31,6 +33,8 @@ public class Door : MonoBehaviour
 
     private void Start()
     {
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
         if(!m_secretDoor)
             m_animator = GetComponent<Animator>();
         m_source = GetComponent<AudioSource>();
@@ -146,6 +150,15 @@ public class Door : MonoBehaviour
     {
         m_secretDoor = true;
         doorState = DoorState.unlock;
+    }
+
+    public void CanOpenFinalDoor()
+    {
+        if(_gameManager.pollitos == 0)
+        {
+           GotKey();
+        }
+        
     }
 
     public enum DoorState
