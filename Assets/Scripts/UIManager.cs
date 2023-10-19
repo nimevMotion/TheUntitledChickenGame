@@ -137,4 +137,9 @@ public class UIManager : MonoBehaviour
         ChangeScene(scene);
     }
 
+    public void ActivateHUD(bool active)
+    {
+        m_HUD.SetActive(active);
+    }
+
 }

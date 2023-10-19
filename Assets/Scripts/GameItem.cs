@@ -8,6 +8,7 @@ public class GameItem : MonoBehaviour
     private ItemManager _itemManager;
     private UIManager _uiManager;
     private HUDManager _hudManager;
+    private Player _player;
 
     // Start is called before the first frame update
     void Start()
@@ -21,6 +22,7 @@ public class GameItem : MonoBehaviour
         _hudManager = GameObject.Find("UIManager").GetComponent<HUDManager>();
         if (_hudManager == null)
             Debug.LogError("No se encuentra el componente HUDManager");
+        _player = GameObject.FindWithTag("Player").GetComponent<Player>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -34,7 +36,14 @@ public class GameItem : MonoBehaviour
             }
             else if (transform.name.Contains("Chocolate"))
             {
-                _itemManager.UpdateItems(new Tuple<string, int, string>(_itemManager.CHOCOLATE_BAR, 1, desc));
+                if(_player.life < 90.0f)
+                {
+                    _player.RecoverHealth(10);
+                }
+                else
+                {
+                    _itemManager.UpdateItems(new Tuple<string, int, string>(_itemManager.CHOCOLATE_BAR, 1, desc));
+                }
                 Destroy(gameObject);
             }else if(transform.name.Equals("FX_LightRayRound_01"))
             {

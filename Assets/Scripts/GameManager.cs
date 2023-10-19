@@ -29,10 +29,12 @@ public class GameManager : MonoBehaviour
     private Player _player;
     private GameData _gameData;
     private MiniMapManager _miniMapManager;
+    private UIManager _uiManager;
     private ItemManager _itemManager;
     private AsyncOperation operacion;
 
     private bool _isCinematic;
+    private bool _loadComplete =  false;
 
     // Start is called before the first frame update
     void Start()
@@ -48,6 +50,7 @@ public class GameManager : MonoBehaviour
 
             _miniMapManager = GameObject.Find("MiniMapPlayer").GetComponent<MiniMapManager>();
             _player = GameObject.FindWithTag("Player").GetComponent<Player>();
+            _uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
             _itemManager = GameObject.Find("UIManager").GetComponent<ItemManager>();
 
             Cursor.lockState = CursorLockMode.Locked;
@@ -156,13 +159,29 @@ public class GameManager : MonoBehaviour
 
     public void EndCinematic()
     {
-        operacion.allowSceneActivation = true;
+        if(_loadComplete)
+            operacion.allowSceneActivation = true;
     }
 
     IEnumerator IniciarCarga(string nivel)
     {
         operacion = SceneManager.LoadSceneAsync(nivel);
         operacion.allowSceneActivation = false;
-        yield return null;
+
+        while (!operacion.isDone)
+        {
+            if (operacion.progress >= 0.9f)
+            {
+                _loadComplete = true;
+            }
+            yield return null;
+        }
+    }
+
+    public void StartCinematic()
+    {
+        _uiManager.ActivateHUD(false);
+        isGameOn = false;
+        m_playableDirector.Play();
     }
 }

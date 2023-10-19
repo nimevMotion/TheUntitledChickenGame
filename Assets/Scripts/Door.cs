@@ -28,6 +28,7 @@ public class Door : MonoBehaviour
     private Animator m_animator;
     private AudioSource m_source;
     private Vector3 _hitNormal;
+    private bool _isFinal = false;
 
     private string _doorInfo;
 
@@ -115,6 +116,12 @@ public class Door : MonoBehaviour
             m_animator.SetTrigger("close");
             m_source.clip = m_AudioClips[1];
             m_source.Play();
+        }else if(_isFinal)
+        {
+            m_animator.SetTrigger(open ? "open" : "close");
+            m_source.clip = m_AudioClips[0];
+            m_source.Play();
+            _gameManager.StartCinematic();
         }
         else
         {
@@ -157,6 +164,7 @@ public class Door : MonoBehaviour
         if(_gameManager.pollitos == 0)
         {
            GotKey();
+            _isFinal = true;
         }
         
     }

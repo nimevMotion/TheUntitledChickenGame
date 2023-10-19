@@ -31,9 +31,12 @@ public class Item : MonoBehaviour
                 break;
             case "Chocolate Bar":
                 if(_player.life < 90)
+                { 
                     _player.RecoverHealth(10);
-                else
-                    _itemManager.UpdateItems(new System.Tuple<string, int, string>(itemName, -1, ""));
+                _itemManager.UpdateItems(new System.Tuple<string, int, string>(itemName, -1, ""));
+                }
+                //else
+                    
                 break;
             case "Key":
                 Debug.Log(itemDesc);
