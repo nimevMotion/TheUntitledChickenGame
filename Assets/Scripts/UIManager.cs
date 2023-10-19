@@ -24,14 +24,11 @@ public class UIManager : MonoBehaviour
 
     private GameManager _gameManager;
     private GameData _gameData;
-    private ItemManager _itemManager;
     private AudioSource _audioSource;
-    private bool _isGameOn = false;
     
     private void Start()
     {
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        _itemManager = GetComponent<ItemManager>();
         _audioSource = GetComponent<AudioSource>();
         
     }
@@ -134,10 +131,10 @@ public class UIManager : MonoBehaviour
         ChangeScene(_gameData.scene);
     }
 
-    public void NewGame()
+    public void NewGame(string scene)
     {
         SaveManager.isNewGame = true;
-        ChangeScene("Scene01_Nivel0");
+        ChangeScene(scene);
     }
 
 }

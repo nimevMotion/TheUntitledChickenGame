@@ -221,9 +221,7 @@ public class Player : MonoBehaviour
                 }
             }
                 
-        }
-
-        
+        }    
     }
 
     IEnumerator Shoot()

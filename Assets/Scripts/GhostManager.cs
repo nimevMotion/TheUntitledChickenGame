@@ -23,6 +23,8 @@ public class GhostManager : MonoBehaviour
     private GameObject m_SpookyGhost;
     [SerializeField]
     private AudioClip m_DyingAudio;
+    [SerializeField]
+    private AudioClip m_SpookyAudio;
 
     private Animator _animator;
     private NavMeshAgent _agent;
@@ -210,9 +212,11 @@ public class GhostManager : MonoBehaviour
     {
         _isDying = true;
         _agent.isStopped = true;
+        _randomOn = true;
         _animator.SetTrigger("dying");
-        
+        _audioSource.Stop();
         _particleSystem.Play();
+
         float opacity = 1.0f;
         while (opacity > 0)
         {
@@ -232,7 +236,6 @@ public class GhostManager : MonoBehaviour
     }
     IEnumerator Spooky()
     {
-        Debug.Log("spooky");
         float opacity = 0.0f;
         m_isSpooky = false;
         state = GhostState.none;
@@ -242,7 +245,8 @@ public class GhostManager : MonoBehaviour
             opacity = opacity + 0.1f;
             _matBody.SetFloat("_Opacity", opacity);
         }
-        transform.position = transform.position + (transform.forward * 0.8f);
+        _audioSource.PlayOneShot(m_SpookyAudio);
+        transform.position = transform.position + (transform.forward * 1f);
         while (opacity > 0)
         {
             opacity = opacity - 0.1f;

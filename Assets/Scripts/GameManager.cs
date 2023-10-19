@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Playables;
 
 public class GameManager : MonoBehaviour
 {
@@ -22,17 +24,23 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     public GameObject[] m_SavePoints;
     [SerializeField]
-    private ItemManager _itemManager;
+    private PlayableDirector m_playableDirector;
 
     private Player _player;
     private GameData _gameData;
     private MiniMapManager _miniMapManager;
+    private ItemManager _itemManager;
+    private AsyncOperation operacion;
+
+    private bool _isCinematic;
 
     // Start is called before the first frame update
     void Start()
     {
         activeScene = SceneManager.GetActiveScene().name;
-        if (!activeScene.Equals("Scene00_Intro") && !activeScene.Equals("SceneA_LoadScene"))
+        if (activeScene.Contains("Cinematic"))
+            _isCinematic = true;
+        if (!activeScene.Equals("Scene00_Intro") && !activeScene.Equals("SceneA_LoadScene") && !_isCinematic)
         {
             isGameOn = true;
             m_Cameras[0].SetActive(false);
@@ -138,5 +146,23 @@ public class GameManager : MonoBehaviour
     {
         doors.Clear();
         doors.AddRange(newDoors);
+    }
+
+    public void StartCinematic(string scene)
+    {
+        SaveManager.isNewGame = true;
+        StartCoroutine(IniciarCarga(scene));
+    }
+
+    public void EndCinematic()
+    {
+        operacion.allowSceneActivation = true;
+    }
+
+    IEnumerator IniciarCarga(string nivel)
+    {
+        operacion = SceneManager.LoadSceneAsync(nivel);
+        operacion.allowSceneActivation = false;
+        yield return null;
     }
 }

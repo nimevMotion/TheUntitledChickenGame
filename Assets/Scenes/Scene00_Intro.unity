@@ -854,7 +854,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: d5f6aeb71dc044045bf10c476000e1d0, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.34
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -2104,7 +2104,7 @@ MonoBehaviour:
   m_Cameras: []
   m_Doors: {fileID: 0}
   m_SavePoints: []
-  _itemManager: {fileID: 0}
+  m_playableDirector: {fileID: 0}
 --- !u!1 &1468872098
 GameObject:
   m_ObjectHideFlags: 0
@@ -3331,7 +3331,7 @@ PrefabInstance:
     - target: {fileID: 2081387809736609952, guid: d01376c2c8a04e84285351074f6b3f46,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2081387809736609952, guid: d01376c2c8a04e84285351074f6b3f46,
         type: 3}
@@ -3367,6 +3367,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
       value: UnityEngine.AudioSource, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 2081387809736609952, guid: d01376c2c8a04e84285351074f6b3f46,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: Scene01_Cinematic01
       objectReference: {fileID: 0}
     - target: {fileID: 2081387809736609952, guid: d01376c2c8a04e84285351074f6b3f46,
         type: 3}
