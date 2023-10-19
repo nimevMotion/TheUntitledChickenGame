@@ -31,11 +31,11 @@ public class Player : MonoBehaviour
 
     /*Private*/
     private Animator m_Animator;
-    private AnimatorClipInfo[] m_CurrentClipInfo;
+    //private AnimatorClipInfo[] m_CurrentClipInfo;
     private AudioSource m_audioPlayer;
-    private Rigidbody m_RBBullet;
-    private Transform mAim;
-    private Transform mplayerMesh;
+    //private Rigidbody m_RBBullet;
+    //private Transform mAim;
+    //private Transform mplayerMesh;
 
     private GameManager _gameManager;
     private HUDManager _hudManager;
@@ -51,8 +51,8 @@ public class Player : MonoBehaviour
    // private bool m_IsPlaying = false;
     private bool isRunning = false;
     private bool isAimming = false;
-    private bool haveGun = true;
-    private bool isMoving = false;
+    //private bool haveGun = true;
+    //private bool isMoving = false;
     private bool isSideWalk = false;
 
     // Start is called before the first frame update
@@ -60,11 +60,12 @@ public class Player : MonoBehaviour
     {
         foreach (Transform child in transform)
         {
-            if (child.name.Equals("Player"))
-                mplayerMesh = child;
-            else if (child.name.Equals("Aim"))
-                mAim = child;
-            else if(child.name.Equals("FX_ExperienceGain_01"))
+            //if (child.name.Equals("Player"))
+            //    mplayerMesh = child;
+            //else if (child.name.Equals("Aim"))
+            //    mAim = child;
+            //else 
+            if(child.name.Equals("FX_ExperienceGain_01"))
                 _experienceGain = child.gameObject.GetComponent<ParticleSystem>();
         }
 
@@ -165,7 +166,7 @@ public class Player : MonoBehaviour
             if (isRunning)
                 speed = 2.0f;
             else
-                speed = 1.0f;
+                speed = 1.5f;
         }
 
     }
