@@ -66,8 +66,13 @@ public class GameManager : MonoBehaviour
             }
         }
         else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = true;
+
             isGameOn = false;
-        
+        }
+
     }
 
     private void Update()
