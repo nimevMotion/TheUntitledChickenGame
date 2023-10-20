@@ -563,7 +563,7 @@ GameObject:
   - component: {fileID: 7661634581213993882}
   m_Layer: 0
   m_Name: Ghost02
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -635,6 +635,7 @@ MonoBehaviour:
   m_isSpooky: 0
   m_SpookyGhost: {fileID: 0}
   m_DyingAudio: {fileID: 8300000, guid: f0ee8908ea40b7e43a05cc609ed90d15, type: 3}
+  m_SpookyAudio: {fileID: 0}
 --- !u!136 &8480236234586796440
 CapsuleCollider:
   m_ObjectHideFlags: 0

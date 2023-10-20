@@ -28,7 +28,7 @@ public class HUDManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        m_numPollitosTxt.text = _gameManager.pollitos.ToString("D2");
+        m_numPollitosTxt.text = _gameManager.numPollitos.ToString("D2");
         m_BarraVida.value = _player.life;
         
     }

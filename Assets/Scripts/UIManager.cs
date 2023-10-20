@@ -20,6 +20,8 @@ public class UIManager : MonoBehaviour
     private GameObject m_MapMenu;
     [SerializeField]
     private GameObject m_SaveMenu;
+    [SerializeField]
+    private GameObject m_GameOverPanel;
 
     private GameManager _gameManager;
     private GameData _gameData;
@@ -53,7 +55,7 @@ public class UIManager : MonoBehaviour
         }
         
     }
-    private void ChangeScene(string scene)
+    public void ChangeScene(string scene)
     {
         LoadScene.NivelACargar(scene);
     }
@@ -139,6 +141,15 @@ public class UIManager : MonoBehaviour
     public void ActivateHUD(bool active)
     {
         m_HUD.SetActive(active);
+    }
+
+    public void GameOver()
+    {
+        m_GameOverPanel.SetActive(true);
+        m_HUD.SetActive(false);
+        m_PauseMenu.SetActive(false);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
 }

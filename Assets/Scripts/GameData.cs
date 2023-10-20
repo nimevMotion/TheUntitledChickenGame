@@ -6,7 +6,6 @@ using System.Collections.Generic;
 public class GameData
 {
     public int playerHealth;
-    public int pollitos;
     public float playerPosX;
     public float playerPosY;
     public float playerPosZ;
@@ -14,6 +13,7 @@ public class GameData
     public List<Tuple<string, int, string>> items;
     public List<Tuple<string, bool, bool>> doors;
     public List<Tuple<string, bool>> map;
+    public List<Tuple<string, bool>> pollitos;
 
     public GameData(GameManager gameManager, Player player, ItemManager item, List<Tuple<string, bool>> mapData)
     {

@@ -9,7 +9,7 @@ public class Player : MonoBehaviour
     public float angleRot = 30.0f;
     public bool isRotating = false;
     public string turn = "";
-    public int life = 50;
+    public int life;
 
     /*Serialized var*/
     [SerializeField]
@@ -31,46 +31,31 @@ public class Player : MonoBehaviour
 
     /*Private*/
     private Animator m_Animator;
-    //private AnimatorClipInfo[] m_CurrentClipInfo;
     private AudioSource m_audioPlayer;
-    //private Rigidbody m_RBBullet;
-    //private Transform mAim;
-    //private Transform mplayerMesh;
 
     private GameManager _gameManager;
     private HUDManager _hudManager;
-    private LookX _lookX;
     private ParticleSystem _experienceGain;
-
-    private string clipName;
 
     private float horizontalInput;
     private float verticalInput;
     private float range = 100.0f;
 
-   // private bool m_IsPlaying = false;
     private bool isRunning = false;
     private bool isAimming = false;
-    //private bool haveGun = true;
-    //private bool isMoving = false;
     private bool isSideWalk = false;
+    private bool isShooting = false;
 
     // Start is called before the first frame update
     void Start()
     {
         foreach (Transform child in transform)
         {
-            //if (child.name.Equals("Player"))
-            //    mplayerMesh = child;
-            //else if (child.name.Equals("Aim"))
-            //    mAim = child;
-            //else 
             if(child.name.Equals("FX_ExperienceGain_01"))
                 _experienceGain = child.gameObject.GetComponent<ParticleSystem>();
         }
 
         m_Animator = GetComponentInChildren<Animator>();
-        _lookX = GetComponentInChildren<LookX>();
         m_audioPlayer = GetComponent<AudioSource>();
         _gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         _hudManager = GameObject.Find("UIManager").GetComponent<HUDManager>();
@@ -79,8 +64,8 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if(_gameManager.isGameOn)
-        if (true && !_gameManager.isGamePaused)
+         
+        if (_gameManager.isGameOn && !_gameManager.isGamePaused)
         {
             horizontalInput = Input.GetAxis("Horizontal");
             verticalInput = Input.GetAxis("Vertical");
@@ -100,29 +85,7 @@ public class Player : MonoBehaviour
             }
 
             //Deteccion de objetos
-            RaycastHit hit;
-            if (Physics.Raycast(m_MainCamera.transform.position, m_MainCamera.transform.forward, out hit, 3.0f))
-            {
-                if(hit.transform.tag.Equals("Interactable"))
-                {
-                    GameObject hitGO = hit.transform.gameObject;
-                    if(hitGO.GetComponent<Door>() != null)
-                    {
-                        _hudManager.UpdateInfoHUD(hit.transform.GetComponent<Door>().GetDoorInfo(hit.normal));
-
-                    }
-                    else if(hitGO.GetComponentInParent<Door>() != null)
-                    {
-                        _hudManager.UpdateInfoHUD(hit.transform.GetComponentInParent<Door>().GetDoorInfo(hit.normal));
-
-                    }
-                }
-                else
-                {
-                    _hudManager.DeactivateInfoHUD();
-                }
-
-            }
+            DeteccionObjetos();
 
             //Aimming
             if (Input.GetMouseButtonDown(1))
@@ -136,7 +99,7 @@ public class Player : MonoBehaviour
                 isAimming = false;
             }
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !isShooting)
             {
                 StartCoroutine("Shoot");
             }
@@ -166,7 +129,7 @@ public class Player : MonoBehaviour
             if (isRunning)
                 speed = 2.0f;
             else
-                speed = 1.5f;
+                speed = 1.75f;
         }
 
     }
@@ -226,6 +189,7 @@ public class Player : MonoBehaviour
 
     IEnumerator Shoot()
     {
+        isShooting = true;
         m_Animator.SetTrigger("shoot");
         RaycastHit hit;
 
@@ -244,7 +208,64 @@ public class Player : MonoBehaviour
                 pollito.GetChicken();
             }
             Instantiate(m_ImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
+        }else
+            yield return new WaitForSeconds(1.0f);
+
+        isShooting = false;
+    }
+
+    public void DeteccionObjetos()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(m_MainCamera.transform.position, m_MainCamera.transform.forward, out hit, 3.0f))
+        {
+            if (hit.transform.tag.Equals("Interactable"))
+            {
+                GameObject hitGO = hit.transform.gameObject;
+                if (hitGO.GetComponent<Door>() != null)
+                {
+                    _hudManager.UpdateInfoHUD(hit.transform.GetComponent<Door>().GetDoorInfo(hit.normal));
+
+                }
+                else if (hitGO.GetComponentInParent<Door>() != null)
+                {
+                    _hudManager.UpdateInfoHUD(hit.transform.GetComponentInParent<Door>().GetDoorInfo(hit.normal));
+
+                }
+                else if (hitGO.name.Equals("FX_LightRayRound_01"))
+                {
+                    _hudManager.UpdateInfoHUD(hitGO.GetComponentInParent<GameItem>().GetInfoSave());
+                }
+            }
+            else
+            {
+                _hudManager.DeactivateInfoHUD();
+            }
         }
+        else
+            _hudManager.DeactivateInfoHUD();
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag.Equals("Enemy"))
+        {
+            life = life - 10;
+            if(life <= 0)
+            {
+                Dying();
+            }
+        }
+    }
+
+    private void Dying()
+    {
+        m_Animator.SetTrigger("Dying");
+        m_audioPlayer.Stop();
+        _gameManager.GameOver();
+        
+        
+
     }
 
     public void RecoverHealth(int cure)

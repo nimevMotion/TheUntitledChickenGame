@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Pollito : MonoBehaviour
-{ 
+{
     private GameManager _gameManager;
     private Animator _animator;
 
@@ -20,9 +20,10 @@ public class Pollito : MonoBehaviour
         //Debug.Log(collision.gameObject.tag);
         if(collision.gameObject.tag.Equals("Player"))
         {
-            _gameManager.pollitos -= 1;
+            _gameManager.numPollitos -= 1;
             Player player = collision.gameObject.GetComponent<Player>();
             player.FindChicken();
+            _gameManager.UpdatePollitos(transform.name);
             Destroy(gameObject);
         }
     }

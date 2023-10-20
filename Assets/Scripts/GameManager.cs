@@ -13,8 +13,9 @@ public class GameManager : MonoBehaviour
     public Vector3 savePoint;
     
     public List<Tuple<string, bool, bool>> doors = new List<Tuple<string, bool,bool>>();
+    public List<Tuple<string, bool>> pollitos = new List<Tuple<string, bool>>();
 
-    public int pollitos;
+    public int numPollitos;
     public string activeScene;
 
     [SerializeField]
@@ -45,6 +46,8 @@ public class GameManager : MonoBehaviour
         if (!activeScene.Equals("Scene00_Intro") && !activeScene.Equals("SceneA_LoadScene") && !_isCinematic)
         {
             isGameOn = true;
+            isGameOver = false;
+
             m_Cameras[0].SetActive(false);
             m_Cameras[0].SetActive(true);
 
@@ -56,6 +59,8 @@ public class GameManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
+            numPollitos = GameObject.FindGameObjectsWithTag("Pollito").Length;
+
             if (!SaveManager.isNewGame)
             {
                 LoadGame();
@@ -63,11 +68,12 @@ public class GameManager : MonoBehaviour
             else
             {
                 GetDoors();
+                GetPollitos();
             }
         }
         else
         {
-            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.lockState = CursorLockMode.Confined;
             Cursor.visible = true;
 
             isGameOn = false;
@@ -99,44 +105,17 @@ public class GameManager : MonoBehaviour
 
     public void LoadGame()
     {
-        //printData(_gameData);
         _gameData = SaveManager.LoadGameData();
 
         _player.life = _gameData.playerHealth;
         Vector3 posPlayer = new Vector3(_gameData.playerPosX, _gameData.playerPosY, _gameData.playerPosZ);
         _player.transform.position = posPlayer;
         _itemManager.UpdateItems(_gameData.items);
-        pollitos = _gameData.pollitos;
+        numPollitos = UpdatePollitos(_gameData.pollitos);
         _miniMapManager.UpdateMapa(_gameData.map);
         UpdateDoors(_gameData.doors);
 
         Debug.Log("Se ha cargado  el juego");
-        printData(_gameData);
-    }
-
-    private void printData(GameData gameData)
-    {
-        print("1" + gameData.playerHealth);
-        print("2" + gameData.pollitos);
-        print("3" + gameData.scene);
-        print("4");
-        List<Tuple<string, int, string>> items = gameData.items;
-        List<Tuple<string, bool, bool>> doorstmp = gameData.doors;
-        List<Tuple<string, bool>> maptmp = gameData.map;
-        for (int i = 0; i < items.Count; i++)
-        {
-            print(items[i].Item1 + " " + items[i].Item2);
-        }
-        print("5");
-        foreach(var i in doorstmp) 
-        {
-            print(i.Item1 + " " + i.Item2 + " " + i.Item3);
-        }
-        print("6");
-        foreach (var i in maptmp)
-        {
-            print(i.Item1 + " " + i.Item2);
-        }
     }
 
     private void GetDoors()
@@ -154,6 +133,59 @@ public class GameManager : MonoBehaviour
     {
         doors.Clear();
         doors.AddRange(newDoors);
+    }
+
+    private void GetPollitos()
+    {
+        GameObject[] pollitosTemp = GameObject.FindGameObjectsWithTag("Pollito");
+        
+        pollitos.Clear();
+        foreach(GameObject i in pollitosTemp)
+        {
+            pollitos.Add(new Tuple<string, bool>(i.name, true));
+        }
+    }
+
+    private int UpdatePollitos(List<Tuple<string, bool>> newPollitos)
+    {
+        GameObject[] pollitosTemp = GameObject.FindGameObjectsWithTag("Pollito");
+        int pollitosActive = 0;
+        pollitos.Clear();
+        foreach(var i in newPollitos)
+        {
+            foreach(var j in pollitosTemp)
+            {
+                if (i.Item1.Equals(j.name))
+                { 
+                    Debug.Log(i.Item1);
+                    if(!i.Item2)
+                        Destroy(j);
+                    else
+                        pollitosActive++;
+
+                    break;
+                }
+            }
+            pollitos.Add(i);
+        }
+
+        return pollitosActive;
+    }
+
+    public void UpdatePollitos(string name)
+    {
+        List<Tuple<string, bool>> temp = new List<Tuple<string, bool>>();
+        
+        temp.AddRange(pollitos);
+        pollitos.Clear();
+
+        foreach (var i in temp)
+        {
+            if (i.Item1.Equals(name))
+                pollitos.Add(new Tuple<string, bool>(name, false));
+            else
+                pollitos.Add(i);
+        }
     }
 
     public void StartCinematic(string scene)
@@ -188,5 +220,12 @@ public class GameManager : MonoBehaviour
         _uiManager.ActivateHUD(false);
         isGameOn = false;
         m_playableDirector.Play();
+    }
+
+    public void GameOver()
+    {
+        isGameOver = true;
+        isGameOn = false;
+        _uiManager.GameOver();
     }
 }

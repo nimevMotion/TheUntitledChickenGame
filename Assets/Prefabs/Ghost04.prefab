@@ -323,7 +323,7 @@ GameObject:
   - component: {fileID: 152860516764812166}
   m_Layer: 0
   m_Name: Ghost04
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -394,6 +394,7 @@ MonoBehaviour:
   m_isSpooky: 0
   m_SpookyGhost: {fileID: 0}
   m_DyingAudio: {fileID: 0}
+  m_SpookyAudio: {fileID: 0}
 --- !u!195 &8660203512156418989
 NavMeshAgent:
   m_ObjectHideFlags: 0

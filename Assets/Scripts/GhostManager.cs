@@ -36,6 +36,7 @@ public class GhostManager : MonoBehaviour
     private Vector3[] _position;
 
     private FieldOfView _fov;
+    private GameManager _gameManager;
     private bool _randomOn = false;
     private bool _binState = false;
     private bool _isDying = false;
@@ -58,6 +59,7 @@ public class GhostManager : MonoBehaviour
                 _position[i] = m_Path[i].transform.position;
             }
 
+            _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
             _animator = GetComponentInChildren<Animator>();
             _agent = GetComponent<NavMeshAgent>();
             _fov = GetComponent<FieldOfView>();
@@ -99,13 +101,28 @@ public class GhostManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (_gameManager.isGameOn && !_gameManager.isGamePaused)
+        {
+            GhostStateFunction();
+        }
+        else if (_gameManager.isGameOver)
+        {
+            _animator.SetBool("walk", false);
+            _animator.SetBool("attack", false);
+        }
+            
+
+    }
+
+    private void GhostStateFunction()
+    {
         switch (state)
         {
             case GhostState.none:
                 _matBody.SetFloat("_Opacity", 0.0f);
                 break;
             case GhostState.spooky:
-                if(m_isSpooky)
+                if (m_isSpooky)
                     StartCoroutine("Spooky");
                 break;
             case GhostState.idle:
@@ -118,7 +135,7 @@ public class GhostManager : MonoBehaviour
                 Attack();
                 break;
             case GhostState.dying:
-                if(!_isDying)
+                if (!_isDying)
                 {
                     StartCoroutine("Die");
                 }
@@ -133,7 +150,7 @@ public class GhostManager : MonoBehaviour
         if (_fov.canSeePlayer && !m_isSpooky)
         {
             state = GhostState.attack;
-        }        
+        }
     }
 
     private void Move()
@@ -162,6 +179,7 @@ public class GhostManager : MonoBehaviour
     {
         _animator.SetBool("attack", true);
         _animator.SetBool("walk", false);
+        gameObject.GetComponent<Collider>().isTrigger = false;
         _agent.enabled = true;
         _agent.destination = _player.transform.position;
     }
@@ -206,7 +224,6 @@ public class GhostManager : MonoBehaviour
         {
             state = GhostState.dying;
         }
-
     }
     IEnumerator Die()
     {

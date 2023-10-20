@@ -23,7 +23,7 @@ public class LookY : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!_gameManager.isGamePaused)
+        if(!_gameManager.isGamePaused && !_gameManager.isGameOver)
         {
             float _mouseY = Input.GetAxis("Mouse Y");
 

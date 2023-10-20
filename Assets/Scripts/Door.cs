@@ -28,8 +28,8 @@ public class Door : MonoBehaviour
     private Animator m_animator;
     private AudioSource m_source;
     private Vector3 _hitNormal;
+    
     private bool _isFinal = false;
-
     private string _doorInfo;
 
     private void Start()
@@ -46,57 +46,62 @@ public class Door : MonoBehaviour
     void Update()
     {
         if(isPlayerDetected)
-        { 
-            switch(doorState)
-            {
-                case DoorState.discovered:
-                    if(Input.GetKeyDown(KeyCode.Q))
-                    {
-                        if (canOpen)
-                        {
-                            doorState = DoorState.unlock;
-                            StartCoroutine("OpenDoor");
-                        }
-                        else
-                        {
-                            m_source.clip = m_AudioClips[2];
-                            m_source.Play();
-                            doorState = DoorState.block; 
-                            _doorInfo = DOOR_1;
-                        }
-
-                    
-                    }
-                    break;
-                case DoorState.unlock:
-                    if (Input.GetKeyDown(KeyCode.Q) && !m_secretDoor)
-                    {
-                        StartCoroutine("OpenDoor");
-                    }
-                    else if(m_secretDoor)
-                    {
-                        float distance = Vector3.Distance(transform.position, m_OpenPostion.position);
-                        
-                        if (distance > 0.0f)
-                            transform.position = Vector3.MoveTowards(transform.position, m_OpenPostion.position, 0.05f);
-                        if(isOpen)
-                        {
-                            isOpen = false;
-                            m_source.Play();
-                        }
-                    }
-                    break;
-
-                case DoorState._lock:
-                    _doorInfo = DOOR_2;
-                    if(Input.GetKeyDown(KeyCode.Q))
-                    {
-                        GotKey();
-                    }
-                    break;
-            }
+        {
+            DoorStateFunction();
         }
 
+    }
+
+    private void DoorStateFunction()
+    {
+        switch (doorState)
+        {
+            case DoorState.discovered:
+                if (Input.GetKeyDown(KeyCode.Q))
+                {
+                    if (canOpen)
+                    {
+                        doorState = DoorState.unlock;
+                        StartCoroutine("OpenDoor");
+                    }
+                    else
+                    {
+                        m_source.clip = m_AudioClips[2];
+                        m_source.Play();
+                        doorState = DoorState.block;
+                        _doorInfo = DOOR_1;
+                    }
+
+
+                }
+                break;
+            case DoorState.unlock:
+                if (Input.GetKeyDown(KeyCode.Q) && !m_secretDoor)
+                {
+                    StartCoroutine("OpenDoor");
+                }
+                else if (m_secretDoor)
+                {
+                    float distance = Vector3.Distance(transform.position, m_OpenPostion.position);
+
+                    if (distance > 0.0f)
+                        transform.position = Vector3.MoveTowards(transform.position, m_OpenPostion.position, 0.05f);
+                    if (isOpen)
+                    {
+                        isOpen = false;
+                        m_source.Play();
+                    }
+                }
+                break;
+
+            case DoorState._lock:
+                _doorInfo = DOOR_2;
+                if (Input.GetKeyDown(KeyCode.Q))
+                {
+                    GotKey();
+                }
+                break;
+        }
     }
 
     IEnumerator OpenDoor()
@@ -161,7 +166,7 @@ public class Door : MonoBehaviour
 
     public void CanOpenFinalDoor()
     {
-        if(_gameManager.pollitos == 0)
+        if(_gameManager.numPollitos == 0)
         {
            GotKey();
             _isFinal = true;
