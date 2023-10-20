@@ -25,10 +25,13 @@ public class GhostManager : MonoBehaviour
     private AudioClip m_DyingAudio;
     [SerializeField]
     private AudioClip m_SpookyAudio;
+    [SerializeField]
+    private Material m_BodyMaterial;
 
     private Animator _animator;
     private NavMeshAgent _agent;
     private Renderer[] _renderer;
+    [SerializeField]
     private Material _matBody;
     private ParticleSystem _particleSystem;
     private AudioSource _audioSource;
@@ -80,7 +83,7 @@ public class GhostManager : MonoBehaviour
             {
                 foreach(var j in i.materials)
                 {
-                    if (i.name.Contains("Body") || i.name.Contains("Cuerpo"))
+                    if (j.name.Contains("Body") || j.name.Contains("Cuerpo"))
                     {
                         _matBody = j;
                         break;
@@ -94,7 +97,6 @@ public class GhostManager : MonoBehaviour
             {
                 Debug.Log("No hay material");
             }
-
         }
     }
 
@@ -206,14 +208,17 @@ public class GhostManager : MonoBehaviour
 
             yield return new WaitForSeconds(0.1f);
             _matBody.SetFloat("_Opacity", opacity);
+            //m_BodyMaterial.SetFloat("_Opacity", opacity);
         }
         while (opacity < 1)
         {
             yield return new WaitForSeconds(0.1f);
             opacity = opacity + 0.1f;
             _matBody.SetFloat("_Opacity", opacity);
+            //m_BodyMaterial.SetFloat("_Opacity", opacity);
         }
         _matBody.SetFloat("_Opacity", 1.0f);
+        //m_BodyMaterial.SetFloat("_Opacity", 1.0f);
     }
 
     public IEnumerator Damage(float damage)
