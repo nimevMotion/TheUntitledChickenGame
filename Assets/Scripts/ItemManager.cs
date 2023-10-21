@@ -25,8 +25,8 @@ public class ItemManager : MonoBehaviour
     private int offsetItemX = 264;
     private int offsetItemY = 264;
 
-    // Start is called before the first frame update
-    void Start()
+
+    public void NewGame()
     {
         items.Add(new Tuple<string, int, string>("Butter", -1, ""));
         DrawItems();
@@ -63,11 +63,11 @@ public class ItemManager : MonoBehaviour
         bool isFirst = true;
         _limWidth = (int)rectTransform.rect.width / 264;
         RectTransform initialRect = null;
-        
-        GameObject[] itemsTemp = GameObject.FindGameObjectsWithTag("Item");
+
+        Item[] itemsTemp = rectTransform.gameObject.GetComponentsInChildren<Item>();
         foreach(var i in itemsTemp)
         {
-            Destroy(i);
+            Destroy(i.gameObject);
         }
 
         for (int i = 0; i < items.Count; i++)

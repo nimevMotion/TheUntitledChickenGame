@@ -74,7 +74,7 @@ public class GhostManager : MonoBehaviour
             if (m_isSpooky)
                 state = GhostState.none;
             else
-                state = GhostState.idle;
+                state = GhostState.move;
             
             if(m_item!=null)
                 _hadItem = true;
@@ -162,7 +162,7 @@ public class GhostManager : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, _position[_index], step);
 
         float distance = Vector3.Distance(transform.position, _position[_index]);
-        if(distance <= 0)
+        if(distance < 1.0f)
         {
             if (_index == m_Path.Length - 1)
             {

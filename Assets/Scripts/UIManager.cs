@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,6 +23,10 @@ public class UIManager : MonoBehaviour
     private GameObject m_SaveMenu;
     [SerializeField]
     private GameObject m_GameOverPanel;
+    [SerializeField]
+    private GameObject m_LoadErrorTxt;
+    [SerializeField]
+    private Button m_LoadButton;
 
     private GameManager _gameManager;
     private GameData _gameData;
@@ -129,7 +134,10 @@ public class UIManager : MonoBehaviour
     {
         SaveManager.isNewGame = false;
         _gameData = SaveManager.LoadGameData();
-        ChangeScene(_gameData.scene);
+        if(_gameData != null)
+            ChangeScene(_gameData.scene);
+        else
+            LoadError();
     }
 
     public void NewGame(string scene)
@@ -150,6 +158,12 @@ public class UIManager : MonoBehaviour
         m_PauseMenu.SetActive(false);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;
+    }
+    private void LoadError()
+    {
+        m_LoadErrorTxt.SetActive(true);
+        m_LoadButton.interactable = false;
+        
     }
 
 }

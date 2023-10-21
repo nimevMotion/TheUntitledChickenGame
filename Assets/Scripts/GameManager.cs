@@ -67,6 +67,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
+                _itemManager.NewGame();
                 GetDoors();
                 GetPollitos();
             }
@@ -103,23 +104,17 @@ public class GameManager : MonoBehaviour
         SaveManager.SaveGameData(this, _player, _itemManager, _miniMapManager.GetData());
     }
 
-    public void LoadGame()
+    private void LoadGame()
     {
         _gameData = SaveManager.LoadGameData();
-        if(_gameData != null)
-        {
-            _player.life = _gameData.playerHealth;
-            Vector3 posPlayer = new Vector3(_gameData.playerPosX, _gameData.playerPosY, _gameData.playerPosZ);
-            _player.transform.position = posPlayer;
-            _itemManager.UpdateItems(_gameData.items);
-            numPollitos = UpdatePollitos(_gameData.pollitos);
-            _miniMapManager.UpdateMapa(_gameData.map);
-            UpdateDoors(_gameData.doors);
-        }
-        else
-        {
-
-        }
+        
+        _player.life = _gameData.playerHealth;
+        Vector3 posPlayer = new Vector3(_gameData.playerPosX, _gameData.playerPosY, _gameData.playerPosZ);
+        _player.transform.position = posPlayer;
+        _itemManager.UpdateItems(_gameData.items);
+        numPollitos = UpdatePollitos(_gameData.pollitos);
+        _miniMapManager.UpdateMapa(_gameData.map);
+        UpdateDoors(_gameData.doors);
         
 
     }

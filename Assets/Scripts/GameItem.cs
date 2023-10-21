@@ -47,7 +47,7 @@ public class GameItem : MonoBehaviour
             else if (transform.name.Contains("Chocolate"))
             {
                 _audioSource.PlayOneShot(m_ItemSound);
-                if (_player.life < 90.0f)
+                if (_player.life < 91)
                 {
                     _player.RecoverHealth(10);
                 }

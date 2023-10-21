@@ -1660,7 +1660,7 @@ MonoBehaviour:
   isGamePaused: 0
   isGameOn: 0
   savePoint: {x: 0, y: 0, z: 0}
-  pollitos: 0
+  numPollitos: 0
   activeScene: 
   m_Cameras: []
   m_Doors: {fileID: 0}

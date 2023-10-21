@@ -29,7 +29,7 @@ public class Item : MonoBehaviour
             case "Butter":
                 break;
             case "Chocolate Bar":
-                if(_player.life < 90)
+                if(_player.life < 100)
                 { 
                     _player.RecoverHealth(10);
                 _itemManager.UpdateItems(new System.Tuple<string, int, string>(itemName, -1, ""));
@@ -38,7 +38,6 @@ public class Item : MonoBehaviour
                     
                 break;
             case "Key":
-                Debug.Log(itemDesc);
                 Door door = GameObject.Find(itemDesc).GetComponent<Door>();
                 if (door != null)
                 {

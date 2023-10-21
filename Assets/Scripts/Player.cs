@@ -270,7 +270,11 @@ public class Player : MonoBehaviour
 
     public void RecoverHealth(int cure)
     {
-        life = life + cure;
+        if(life < 100)
+            life = life + cure;
+
+        if (life > 100)
+            life = 100;
     }
 
     public void FindChicken()

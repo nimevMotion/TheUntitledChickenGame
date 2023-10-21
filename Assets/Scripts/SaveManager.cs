@@ -13,6 +13,7 @@ public static class SaveManager
     {
         GameData gameData = new GameData(gameManager, player, item, map);
         string dataPath = Application.persistentDataPath + "/game.save";
+        
         FileStream fileStream = new FileStream(dataPath, FileMode.Create);
         BinaryFormatter formatter = new BinaryFormatter();
         formatter.Serialize(fileStream, gameData);
@@ -22,7 +23,7 @@ public static class SaveManager
     public static GameData LoadGameData()
     {
         string dataPath = Application.persistentDataPath + "/game.save";
-
+        
         if (File.Exists(dataPath))
         {
             FileStream fileStream = new FileStream(dataPath, FileMode.Open);
