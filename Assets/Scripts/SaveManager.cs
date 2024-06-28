@@ -6,7 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public static class SaveManager
 {
-    public static bool isNewGame;
+    //public static bool isNewGame;
     public static string scene;
 
     public static void SaveGameData(GameManager gameManager, Player player, ItemManager item, List<Tuple<string, bool>> map)
@@ -18,6 +18,12 @@ public static class SaveManager
         BinaryFormatter formatter = new BinaryFormatter();
         formatter.Serialize(fileStream, gameData);
         fileStream.Close();
+    }
+    
+    public static void NewGameData()
+    {
+        string dataPath = Application.persistentDataPath + "/game.save";
+        File.Delete(dataPath);
     }
 
     public static GameData LoadGameData()
@@ -35,5 +41,16 @@ public static class SaveManager
         }
         else
             return null;
+    }
+
+    public static bool GameDataExists()
+    {
+        string dataPath = Application.persistentDataPath + "/game.save";
+        if (File.Exists(dataPath))
+        {
+            return true;
+        }
+        else
+            return false;
     }
 }

@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
 
             numPollitos = GameObject.FindGameObjectsWithTag("Pollito").Length;
 
-            if (!SaveManager.isNewGame)
+            if (SaveManager.GameDataExists())
             {
                 LoadGame();
             }
@@ -115,7 +115,6 @@ public class GameManager : MonoBehaviour
         numPollitos = UpdatePollitos(_gameData.pollitos);
         _miniMapManager.UpdateMapa(_gameData.map);
         UpdateDoors(_gameData.doors);
-        
 
     }
 
@@ -191,7 +190,7 @@ public class GameManager : MonoBehaviour
 
     public void StartCinematic(string scene)
     {
-        SaveManager.isNewGame = true;
+        //SaveManager.isNewGame = true;
         StartCoroutine(IniciarCarga(scene));
     }
 

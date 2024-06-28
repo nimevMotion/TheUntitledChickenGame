@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
@@ -31,12 +32,14 @@ public class UIManager : MonoBehaviour
     private GameManager _gameManager;
     private GameData _gameData;
     private AudioSource _audioSource;
+
+    private bool gameData;
     
     private void Start()
     {
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         _audioSource = GetComponent<AudioSource>();
-        
+                
     }
 
     private void Update()
@@ -70,6 +73,12 @@ public class UIManager : MonoBehaviour
         enterButton.SetActive(false);
         pollito.SetActive(false);
         panelButtons.SetActive(true);
+        if (!SaveManager.GameDataExists())
+        {
+            //m_LoadButton.gameObject.SetActive(false);
+            m_LoadButton.interactable = false;
+            TextMeshProUGUI loadBtnTxt = m_LoadButton.GetComponentInChildren<TextMeshProUGUI>();
+        }
 
     }
 
@@ -132,7 +141,7 @@ public class UIManager : MonoBehaviour
 
     public void LoadGame()
     {
-        SaveManager.isNewGame = false;
+        //SaveManager.isNewGame = false;
         _gameData = SaveManager.LoadGameData();
         if(_gameData != null)
             ChangeScene(_gameData.scene);
@@ -142,7 +151,8 @@ public class UIManager : MonoBehaviour
 
     public void NewGame(string scene)
     {
-        SaveManager.isNewGame = true;
+        //SaveManager.isNewGame = true;
+        SaveManager.NewGameData();
         ChangeScene(scene);
     }
 
