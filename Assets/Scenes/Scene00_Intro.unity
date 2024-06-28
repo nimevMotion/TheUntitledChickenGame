@@ -140,6 +140,7 @@ GameObject:
   - component: {fileID: 188836091}
   - component: {fileID: 188836093}
   - component: {fileID: 188836092}
+  - component: {fileID: 188836094}
   m_Layer: 5
   m_Name: LoadErrorTxt
   m_TagString: Untagged
@@ -197,7 +198,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4288927350
+    rgba: 4272150134
   m_fontColor: {r: 0.46337664, g: 0.8396226, b: 0.6374961, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -265,6 +266,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 188836090}
   m_CullTransparentMesh: 1
+--- !u!95 &188836094
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 188836090}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: db2dae449bfcf7d46bc1363b710b0e38, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &227764552
 GameObject:
   m_ObjectHideFlags: 0
@@ -1980,9 +2002,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Exit Game
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 4c574ac5798d4bf498bb76dea78544a0, type: 2}
-  m_sharedMaterial: {fileID: -4911792843094221995, guid: 4c574ac5798d4bf498bb76dea78544a0,
-    type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2997,9 +3018,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Load Game
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 4c574ac5798d4bf498bb76dea78544a0, type: 2}
-  m_sharedMaterial: {fileID: -4911792843094221995, guid: 4c574ac5798d4bf498bb76dea78544a0,
-    type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3138,7 +3158,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 1, g: 1, b: 1, a: 0.078431375}
     m_PressedColor: {r: 1, g: 0.81035805, b: 0, a: 0.6039216}
     m_SelectedColor: {r: 1, g: 0.87243414, b: 0, a: 0}
-    m_DisabledColor: {r: 0.48235294, g: 0, b: 0, a: 0.19215687}
+    m_DisabledColor: {r: 0, g: 0, b: 0, a: 0.19215687}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:

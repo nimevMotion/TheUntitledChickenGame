@@ -75,9 +75,9 @@ public class UIManager : MonoBehaviour
         panelButtons.SetActive(true);
         if (!SaveManager.GameDataExists())
         {
-            //m_LoadButton.gameObject.SetActive(false);
-            m_LoadButton.interactable = false;
+            //m_LoadButton.interactable = false;
             TextMeshProUGUI loadBtnTxt = m_LoadButton.GetComponentInChildren<TextMeshProUGUI>();
+            loadBtnTxt.color = loadBtnTxt.color * new Vector4(1, 1, 1, 0.1f);
         }
 
     }
