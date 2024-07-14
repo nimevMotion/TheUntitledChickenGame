@@ -95,6 +95,11 @@ public class GameManager : MonoBehaviour
             {
                 Cursor.visible = true;
             }
+
+            if (isGamePaused && Input.GetKeyDown(KeyCode.Escape))
+                isGamePaused = false;
+
+
         }
     }
 

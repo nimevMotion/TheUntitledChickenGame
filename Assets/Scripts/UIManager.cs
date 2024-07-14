@@ -75,7 +75,6 @@ public class UIManager : MonoBehaviour
         panelButtons.SetActive(true);
         if (!SaveManager.GameDataExists())
         {
-            //m_LoadButton.interactable = false;
             TextMeshProUGUI loadBtnTxt = m_LoadButton.GetComponentInChildren<TextMeshProUGUI>();
             loadBtnTxt.color = loadBtnTxt.color * new Vector4(1, 1, 1, 0.1f);
         }
@@ -141,7 +140,6 @@ public class UIManager : MonoBehaviour
 
     public void LoadGame()
     {
-        //SaveManager.isNewGame = false;
         _gameData = SaveManager.LoadGameData();
         if(_gameData != null)
             ChangeScene(_gameData.scene);
@@ -151,7 +149,6 @@ public class UIManager : MonoBehaviour
 
     public void NewGame(string scene)
     {
-        //SaveManager.isNewGame = true;
         SaveManager.NewGameData();
         ChangeScene(scene);
     }
